@@ -121,13 +121,42 @@ def main_page_admin():
 
             print(f'Data baru "{masukan_apa_edit_admin}" telah diubah!')
 
-
             print("Press anykey to back to Main Menu")
             input()
             main_page_admin()
         elif menu_choice_2 == '2':    # edit data karyawan
+            os.system('cls')
+            masukan_edit_employee = input("admin>menu utama>edit data>\n=============== MENU EDIT DATA KARYAWAN ===============\n\nMasukkan ID karyawan yang hendak diubah : ")
+            data_employee = []
+            
+            with open('employee_account_database.csv') as csvfile_employee:
+                reader_Employee = csv.reader(csvfile_employee)
+                for row in reader_Employee:
+                    data_employee.append(row)
+            employee_column = [x[0] for x in data_employee]
+            if masukan_edit_employee in employee_column:
+                for x in range(0,len(data_employee)):
+                    if masukan_edit_employee == data_employee[x][0]:
+                        print(f'Data yang hendak diubah : "{data_employee[x]}"\n')
+            
+            masukan_apa_edit_employee = input("Masukkan data yang baru [ID,Nama,Posisi,Shift 1,Shift 2,Shift 3] : ")
+
+            file = open('employee_account_database.csv', 'r')    # membuka file dengan tujuan 'read' (membaca)
+            data = file.readlines()                 # mengambil data dari .csv berbentuk baris untuk digunakan ke python            
+            file = open('employee_account_database.csv', 'w')    # membuka file dengan tujuan 'write' (menulis timpa)
+
+            for line in data :                                  # perulangan agar tiap baris data dibaca, 
+                if line.strip("\n") != data_employee[x]:          # data dari .csv dicocokkan degan inputan user 
+                    file.write(line)
+            file = open('employee_account_database.csv', 'a')
+            file.write(masukan_apa_edit_employee)
+            file.write('\n')
+            file.close
+
+            print(f'Data baru "{masukan_apa_edit_employee}" telah diubah!')
 
             print("Press anykey to back to Main Menu")
+            input()
             main_page_admin()
         else:
             main_page_admin()
