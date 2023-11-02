@@ -1,9 +1,46 @@
 import csv    # import csv
-import os    # agar bisa clean terminal
-import pandas as pd    # import pandas
-from pathlib import Path    # import modul path
+import os     # agar bisa clean terminal
+import pandas as pd        # import pandas
+from pathlib import Path   # import modul path
 
 # <--pakai komen disamping untuk berkomunikasi, soalnya kodenya bakal ancur klo semua bisa ngetik
+
+# fitur:
+
+# # login page v
+# # launch page v
+# # main menu admin v
+# # main menu employee v
+
+# # ADMIN
+# # -tambahkan orang v
+# # --tambahkan admin v
+# # --tambahkan karyawan v
+# # -edit data
+# # --edit data admin
+# # --edit data karyawan
+# # -edit presensi karyawan
+# # -lihat data
+# # --lihat data admin
+# # --lihat data karyawan
+# # --lihat presensi karyawan
+# # -hapus data
+# # --hapus data admin
+# # --hapus data karyawan
+# # --hapus presensi karyawan
+# # -keluar
+
+# # KARYAWAN
+# # -presensi sekarang
+# # --masukkan tanggal
+# # ---shift pagi
+# # ---shift siang
+# # ---shift malam
+# # ---kembali
+# # -lihat jadwal shift
+# # -lihat rekapitulasi presensi
+# # -informasi mengenai shift
+# # -keluar
 
 # HALAMAN UTAMA ADMIN-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -202,9 +239,6 @@ def main_page_employee():
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
 # MEMBUKA FILE UNTUK PERTAMA KALINYA--------------------------------------------------------------------------------------------------------------------------
 
 os.system('cls')
@@ -235,7 +269,6 @@ if not(Path('admin_account_database.csv').is_file()):
     with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
         admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
         admin_list.writeheader()
-
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
