@@ -50,10 +50,27 @@ def main_page_admin():
         menu_choice_2 = input("[1]Edit Data Admin\n[2]Edit Data Karyawan\nPilih menu : ")
         if menu_choice_2 == '1':    # edit data admin
             os.system('cls')
-            masukan_edit_admin = input("admin>menu utama>edit data>edit data admin\n=============== MENU EDIT DATA ADMIN ===============\n\nMasukkan ID admin yang hendak diubah : ")
-           
-            # tulis kode disini
-
+            data_admin = []
+            with open('admin_account_database.csv') as csvfile_admin:       # membuka data admin dari csv ke list
+                reader_Admin = csv.reader(csvfile_admin)
+                for row in reader_Admin:
+                    data_admin.append(row)
+            df = pd.DataFrame(data_admin, columns=kolom_admin) 
+            masukan_edit_admin = input(f"admin>menu utama>edit data>edit data admin\n=============== MENU EDIT DATA ADMIN ===============\n\n{df}\n\nMasukkan ID admin yang hendak diubah : ")
+            if masukan_edit_admin in df['ID'].values:
+                baris_admin = df[df['ID'] == masukan_edit_admin]  # Menemukan baris yang sesuai dengan ID
+                IDBaru     = input("Masukkan ID baru: ")
+                namaBaru   = input("Masukkan nama baru: ")
+                posisiBaru = input("Masukkan posisi baru: ")
+                bidangBaru = input("Masukkan bidang baru: ")
+                df.loc[baris_admin.index, 'ID'] = IDBaru
+                df.loc[baris_admin.index, 'Nama'] = namaBaru
+                df.loc[baris_admin.index, 'Posisi'] = posisiBaru
+                df.loc[baris_admin.index, 'Bidang'] = bidangBaru
+                np.savetxt('admin_account_database.csv',df,delimiter=',',fmt='%s')
+                print(f'\nData baru "{masukan_edit_admin}" telah diubah!\n\nData saat ini :\n{df}\n')
+            else:
+                print(f"{masukan_edit_admin} tidak ada dalam database.")
             input("Press [enter] to back to Main Menu")    # back to main menu
             main_page_admin()
         elif menu_choice_2 == '2':  # edit data karyawan
