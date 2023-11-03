@@ -1,7 +1,8 @@
 import csv    # import csv
-import os     # agar bisa clean terminal
-import pandas as pd        # import pandas
-from pathlib import Path   # import modul path
+import os    # agar bisa clean terminal
+import pandas as pd    # import pandas
+import numpy as np    # import numpy
+from pathlib import Path    # import modul path
 
 # <--pakai komen disamping untuk berkomunikasi, soalnya kodenya bakal ancur klo semua bisa ngetik
 
@@ -20,10 +21,10 @@ from pathlib import Path   # import modul path
 # # --edit data admin
 # # --edit data karyawan
 # # -edit presensi karyawan
-# # -lihat data
-# # --lihat data admin
-# # --lihat data karyawan
-# # --lihat presensi karyawan
+# # -lihat data v
+# # --lihat data admin v
+# # --lihat data karyawan v
+# # --lihat presensi karyawan v
 # # -hapus data
 # # --hapus data admin
 # # --hapus data karyawan
@@ -57,9 +58,7 @@ def main_page_admin():
         for x in range(0,len(data_admin)):
             if launch_ID == data_admin[x][0]:
                 print(f'Selamat Datang, admin "{data_admin[x][1]}"!\n')
-
     print('\nMenu:\n[1] Tambahkan Orang\n[2] Edit Data\n[3] Edit Presensi Karyawan\n[4] Lihat Data\n[5] Hapus Data\n[6] Keluar')
-
     menu_choice = input("\nPilih menu : ")
     print()
 
@@ -94,106 +93,136 @@ def main_page_admin():
             os.system('cls')
             masukan_edit_admin = input("admin>menu utama>edit data>\n=============== MENU EDIT DATA ADMIN ===============\n\nMasukkan ID admin yang hendak diubah : ")
            
-            data_admin = []
-            with open('admin_account_database.csv') as csvfile_admin:
-                reader_Admin = csv.reader(csvfile_admin)
-                for row in reader_Admin:
-                    data_admin.append(row)
-            admin_column = [x[0] for x in data_admin]
-            if masukan_edit_admin in admin_column:
-                for x in range(0,len(data_admin)):
-                    if masukan_edit_admin == data_admin[x][0]:
-                        print(f'Data yang hendak diubah : "{data_admin[x]}"\n')
-            
-            masukan_apa_edit_admin = input("Masukkan data yang baru [ID,Nama,Posisi,Bidang] : ")
-
-            file = open('admin_account_database.csv', 'r')    # membuka file dengan tujuan 'read' (membaca)
-            data = file.readlines()                 # mengambil data dari .csv berbentuk baris untuk digunakan ke python            
-            file = open('admin_account_database.csv', 'w')    # membuka file dengan tujuan 'write' (menulis timpa)
-
-            for line in data :                                  # perulangan agar tiap baris data dibaca, 
-                if line.strip("\n") != data_admin[x]:          # data dari .csv dicocokkan degan inputan user 
-                    file.write(line)
-            file = open('admin_account_database.csv', 'a')
-            file.write(masukan_apa_edit_admin)
-            file.write('\n')
-            file.close
+            # tulis kode disini
 
             print(f'Data baru "{masukan_apa_edit_admin}" telah diubah!')
+
 
             print("Press anykey to back to Main Menu")
             input()
             main_page_admin()
         elif menu_choice_2 == '2':    # edit data karyawan
-            os.system('cls')
-            masukan_edit_employee = input("admin>menu utama>edit data>\n=============== MENU EDIT DATA KARYAWAN ===============\n\nMasukkan ID karyawan yang hendak diubah : ")
-            data_employee = []
-            
-            with open('employee_account_database.csv') as csvfile_employee:
-                reader_Employee = csv.reader(csvfile_employee)
-                for row in reader_Employee:
-                    data_employee.append(row)
-            employee_column = [x[0] for x in data_employee]
-            if masukan_edit_employee in employee_column:
-                for x in range(0,len(data_employee)):
-                    if masukan_edit_employee == data_employee[x][0]:
-                        print(f'Data yang hendak diubah : "{data_employee[x]}"\n')
-            
-            masukan_apa_edit_employee = input("Masukkan data yang baru [ID,Nama,Posisi,Shift 1,Shift 2,Shift 3] : ")
 
-            file = open('employee_account_database.csv', 'r')    # membuka file dengan tujuan 'read' (membaca)
-            data = file.readlines()                 # mengambil data dari .csv berbentuk baris untuk digunakan ke python            
-            file = open('employee_account_database.csv', 'w')    # membuka file dengan tujuan 'write' (menulis timpa)
-
-            for line in data :                                  # perulangan agar tiap baris data dibaca, 
-                if line.strip("\n") != data_employee[x]:          # data dari .csv dicocokkan degan inputan user 
-                    file.write(line)
-            file = open('employee_account_database.csv', 'a')
-            file.write(masukan_apa_edit_employee)
-            file.write('\n')
-            file.close
-
-            print(f'Data baru "{masukan_apa_edit_employee}" telah diubah!')
+            # tulis kode disini
 
             print("Press anykey to back to Main Menu")
-            input()
             main_page_admin()
         else:
             main_page_admin()
 
     elif menu_choice == '3':    # edit presensi karyawan
-        print("Press anykey to back to Main Menu")
-        return
+
+        # tulis kode disini
+ 
+        input("Press anykey to back to Main Menu")
+        main_page_admin()
 
     elif menu_choice == '4':
         menu_choice_4 = input("[1]Lihat Data Admin\n[2]Lihat Data Karyawan\n[3]Lihat Presensi Karyawan\nPilih menu : ")
         if menu_choice_4 == '1':    # lihat data admin
-
-            print("Press anykey to back to Main Menu")
-            return
+            data_admin = []
+            with open('admin_account_database.csv') as csvfile_admin:
+                reader_Admin = csv.reader(csvfile_admin)
+                for row in reader_Admin:
+                    data_admin.append(row)
+            df = pd.DataFrame(data_admin, columns=kolom_admin)
+            print(df)
+            input("Press anykey to back to Main Menu")
+            main_page_admin()
         elif menu_choice_4 == '2':    # lihat data karyawan
-
-            print("Press anykey to back to Main Menu")
-            return
+            data_employee = []
+            with open('employee_account_database.csv') as csvfile_employee:
+                reader_employee = csv.reader(csvfile_employee)
+                for row in reader_employee:
+                    data_employee.append(row)
+            df = pd.DataFrame(data_employee, columns=kolom_employee)
+            print(df)
+            input("Press anykey to back to Main Menu")
+            main_page_admin()
         elif menu_choice_4 == '3':    # lihat presensi karyawan
-
-            print("Press anykey to back to Main Menu")
-            return
+            data_presensi = []
+            with open('presensi_database.csv') as csvfile_presensi:
+                reader_presensi = csv.reader(csvfile_presensi)
+                for row in reader_presensi:
+                    data_presensi.append(row)
+            df = pd.DataFrame(data_presensi, columns=kolom_presensi)
+            print(df)
+            input("Press anykey to back to Main Menu")
+            main_page_admin()
         else:
             main_page_admin()
 
     elif menu_choice == '5':
-        menu_choice_5 = input("[1]Hapus Data Admin\n[2]Hapus Data Karyawan\n[3]Hapus Presensi Karyawan\nPilih menu : ")
+        menu_choice_5 = input("[1] Hapus Data Admin\n[2] Hapus Data Karyawan\n[3] Hapus Presensi Karyawan\nPilih menu : ")
         if menu_choice_5 == '1':    # hapus data admin
+            os.system('cls')
+            print("admin>menu utama>hapus data>\n=============== MENU HAPUS DATA ADMIN ===============\nmenampilkan keseluruhan data...\n")
+            data_admin = []
+            with open('admin_account_database.csv') as csvfile_admin:
+                reader_Admin = csv.reader(csvfile_admin)
+                for row in reader_Admin:
+                    data_admin.append(row)
+            df = pd.DataFrame(data_admin, columns=kolom_admin)
+            print(df)
 
-            print("Press anykey to back to Main Menu")
-            return
+            menghapus_file = input("\nMasukkan ID admin yang mau dihapus : ")      # user memasukkan data yang ingin dihapus
+            admin_column = [x[0] for x in data_admin]
+            if menghapus_file in admin_column:
+                for x in range(0,len(data_admin)):
+                    if menghapus_file == data_admin[x][0]:
+                        print(f'Data admin yang akan dihapus : "{data_admin[x]}"!\n')
+                        pilihan_admin_hapus = input("Anda yakin?\nTekan [1] untuk menghapus\nTekan [2] atau [tombol lain] untuk membatalkan : ")
+                        if pilihan_admin_hapus == '1':
+                            df = pd.DataFrame(data_admin, columns=kolom_admin)
+                            df = df.drop(x)
+                            np.savetxt('admin_account_database.csv',df,delimiter=',',fmt='% s')
+                            print(f"\nID deleted : {menghapus_file}\nHasil data : \n{df}")     # menampilkan data yang dihapus
+                            input("\nPress anykey to back to Main Menu")
+                            main_page_admin()
+                        else:
+                            input("\nMembatalkan ... Press anykey to back to Main Menu")
+                            main_page_admin()
+            else:
+                input("\nData tidak ada ... Press anykey to back to Main Menu")
+                main_page_admin()
+
         elif menu_choice_5 == '2':    # hapus data karyawan
 
-            print("Press anykey to back to Main Menu")
-            return
+            os.system('cls')
+            print("admin>menu utama>hapus data>\n=============== MENU HAPUS DATA KARYAWAN ===============\nmenampilkan keseluruhan data...\n")
+            data_employee = []
+            with open('employee_account_database.csv') as csvfile_employee:
+                reader_employee = csv.reader(csvfile_employee)
+                for row in reader_employee:
+                    data_employee.append(row)
+            df = pd.DataFrame(data_employee, columns=kolom_employee)
+            print(df)
+
+            menghapus_file = input("\nMasukkan ID admin yang mau dihapus : ")      # user memasukkan data yang ingin dihapus
+            employee_column = [x[0] for x in data_employee]
+            if menghapus_file in employee_column:
+                for x in range(0,len(data_employee)):
+                    if menghapus_file == data_employee[x][0]:
+                        print(f'Data karyawan yang akan dihapus : "{data_employee[x]}"!\n')
+                        pilihan_employee_hapus = input("Anda yakin?\nTekan [1] untuk menghapus\nTekan [2] atau [tombol lain] untuk membatalkan : ")
+                        if pilihan_employee_hapus == '1':
+                            df = pd.DataFrame(data_employee, columns=kolom_employee)
+                            df = df.drop(x)
+                            np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='% s')
+                            print(f"\nID deleted : {menghapus_file}\nHasil data : \n{df}")     # menampilkan data yang dihapus
+                            input("\nPress anykey to back to Main Menu")
+                            main_page_admin()
+                        else:
+                            input("\nMembatalkan ... Press anykey to back to Main Menu")
+                            main_page_admin()
+            else:
+                input("\nData tidak ada ... Press anykey to back to Main Menu")
+                main_page_admin()
+
         elif menu_choice_5 == '3':    # hapus presensi karyawan
 
+            # tulis kode disini
+ 
             print("Press anykey to back to Main Menu")
             return
         else:
@@ -202,6 +231,7 @@ def main_page_admin():
     elif menu_choice == '6':    # kembali ke login page
         launch_page_condition = True
         return
+
     else:
         main_page_admin()    # salah input, kembali ke menu utama admin
     os.system('cls')
@@ -248,20 +278,30 @@ def main_page_employee():
                 repeat_menu_choice_1 = True
 
     elif menu_choice == '2':
+
         #print jadwal shift
+        
         input(print("Press anykey to continue"))
         main_page_employee()
+
     elif menu_choice == '3':
+
         #print rekap absen
+
         input(print("Press anykey to continue"))
         main_page_employee()
+
     elif menu_choice == '4':
+
         #print eula
+        
         input(print("Press anykey to continue"))
         main_page_employee()
+    
     elif menu_choice == '5':        # kembali ke login page
         launch_page_condition =True
         return
+
     else:
         main_page_employee()
     os.system('cls')
@@ -335,6 +375,7 @@ while launch_page_condition:
                             launch_page_condition = True
                 else:
                     launch_page_condition : True
+
             elif launch_ID in employee_list:
                 data_employee = []
                 with open('employee_account_database.csv') as csvfile_employee:
@@ -351,10 +392,13 @@ while launch_page_condition:
                             launch_page_condition = True
                 else:
                     launch_page_condition = True
+
             else:
                 launch_page_condition = True
+
     elif launch_menu in 'Qq':
         break
+
     else:
         launch_page_condition = True
 
