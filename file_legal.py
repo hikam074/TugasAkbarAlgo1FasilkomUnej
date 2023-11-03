@@ -112,7 +112,7 @@ def main_page_admin():
                     data_presensi.append(row)
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)        # memasukkan data list ke pandas
             print(df)                                                       # menampilkan data
-            input("Press [enter] to back to Main Menu)  # back to main menu
+            input("Press [enter] to back to Main Menu")  # back to main menu
             main_page_admin()
         else:
             main_page_admin()
