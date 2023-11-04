@@ -47,7 +47,7 @@ def main_page_admin():
             main_page_admin()
 
     elif menu_choice == '2':        # menu edit data, terdiri dari edit data admin, edit data karyawan
-        menu_choice_2 = input("[1]Edit Data Admin\n[2]Edit Data Karyawan\nPilih menu : ")
+        menu_choice_2 = input("[1] Edit Data Admin\n[2] Edit Data Karyawan\n[3] Edit Shift Karyawan\nPilih menu : ")
         if menu_choice_2 == '1':    # edit data admin
             os.system('cls')
             data_admin = []
@@ -59,6 +59,7 @@ def main_page_admin():
             masukan_edit_admin = input(f"admin>menu utama>edit data>edit data admin\n=============== MENU EDIT DATA ADMIN ===============\n\n{df}\n\nMasukkan ID admin yang hendak diubah : ")
             if masukan_edit_admin in df['ID'].values:
                 baris_admin = df[df['ID'] == masukan_edit_admin]  # Menemukan baris yang sesuai dengan ID
+                print(f"Data yang akan diedit : \n{baris_admin}")
                 IDBaru     = input("Masukkan ID baru: ")
                 namaBaru   = input("Masukkan nama baru: ")
                 posisiBaru = input("Masukkan posisi baru: ")
@@ -73,20 +74,61 @@ def main_page_admin():
                 print(f"{masukan_edit_admin} tidak ada dalam database.")
             input("Press [enter] to back to Main Menu")    # back to main menu
             main_page_admin()
-        elif menu_choice_2 == '2':  # edit data karyawan
-            os.system('cls')
-            masukan_edit_employee = input("admin>menu utama>edit data>edit data karyawan\n=============== MENU EDIT DATA KARYAWAN ===============\n\nMasukkan ID karyawan yang hendak diubah : ")
-
-            # tulis kode disini
-
-            input("Press [enter] to back to Main Menu")    # back to main menu
-            main_page_admin()
-        else:
-            main_page_admin()
+        # elif menu_choice_2 == '2':  # edit data karyawan
+        #     os.system('cls')
+        #     data_employee = []
+        #     with open('employee_account_database.csv') as csvfile_employee:       # membuka data employee dari csv ke list
+        #         reader_employee = csv.reader(csvfile_employee)
+        #         for row in reader_employee:
+        #             data_employee.append(row)
+        #     df = pd.DataFrame(data_employee, columns=kolom_employee) 
+        #     masukan_edit_employee = input(f"admin>menu utama>edit data>edit data karyawan\n=============== MENU EDIT DATA KARYAWAN ===============\n\n{df}\n\nMasukkan ID karyawan yang hendak diubah : ")
+        #     if masukan_edit_employee in df['ID'].values:
+        #         baris_employee = df[df['ID'] == masukan_edit_employee]  # Menemukan baris yang sesuai dengan ID
+        #         print(f"Data yang akan diedit : \n{baris_employee}")
+        #         IDBaru = input("Masukkan ID baru: ")
+        #         df.loc[baris_employee.index, 'ID'] = IDBaru
+        #         namaBaru = input("Masukkan nama baru: ")
+        #         df.loc[baris_employee.index, 'Nama'] = namaBaru
+        #         posisiBaru = input("Masukkan posisi baru: ")
+        #         df.loc[baris_employee.index, 'Posisi'] = posisiBaru
+        #         np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='%s')
+        #         print(f'\nData baru untuk "{masukan_edit_employee}" telah diubah!\n\nData saat ini :\n{df}\n')
+        #     else:
+        #         print("Kesalahan input atau data tidak ada...")
+        #     input("Press [enter] to back to Main Menu")    # back to main menu
+        #     main_page_admin()
+        # elif menu_choice_2 == '3':
+        #     os.system('cls')
+        #     data_employee = []
+        #     with open('employee_account_database.csv') as csvfile_employee:       # membuka data employee dari csv ke list
+        #         reader_employee = csv.reader(csvfile_employee)
+        #         for row in reader_employee:
+        #             data_employee.append(row)
+        #     df = pd.DataFrame(data_employee, columns=kolom_employee) 
+        #     masukan_edit_employee = input(f"admin>menu utama>edit data>edit shift karyawan\n=============== MENU EDIT JADWAL SHIFT KARYAWAN ===============\n\n{df}\n\nMasukkan ID karyawan yang hendak diubah : ")
+        #     if masukan_edit_employee in df['ID'].values:
+        #         baris_employee = df[df['ID'] == masukan_edit_employee]  # Menemukan baris yang sesuai dengan ID
+        #         print(f"Data yang akan diedit : \n{baris_employee}")
+        #         shift1Baru = input("Masukkan shift 1 baru: ")
+        #         df.loc[baris_employee.index, 'Shift1'] = shift1Baru
+        #         shift2Baru = input("Masukkan shift 2 baru: ")
+        #         df.loc[baris_employee.index, 'Shift2'] = shift2Baru
+        #         shift3Baru = input("Masukkan shift3 baru: ")
+        #         df.loc[baris_employee.index, 'Shift 3'] = shift3Baru
+        #         np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='%s')
+        #         print(f'\nData baru untuk "{masukan_edit_employee}" telah diubah!\n\nData saat ini :\n{df}\n')
+        #     else:
+        #         print("Kesalahan input atau data tidak ada...")
+        #     input("Press [enter] to back to Main Menu")    # back to main menu
+        #     main_page_admin()
+        # else:
+        #     input("Press [enter] to back to Main Menu")    # back to main menu
+        #     main_page_admin()
 
     elif menu_choice == '3':    # edit presensi karyawan
-            os.system('cls')
-            masukan_edit_presensi = input("admin>menu utama>edit presensi karyawan\n=============== MENU EDIT PRESENSI KARYAWAN ===============\n\nMasukkan ID karyawan yang hendak diubah : ")
+        os.system('cls')
+        masukan_edit_presensi = input("admin>menu utama>edit presensi karyawan\n=============== MENU EDIT PRESENSI KARYAWAN ===============\n\nMasukkan ID karyawan yang hendak diubah : ")
 
         # tulis kode disini
  
@@ -201,11 +243,28 @@ def main_page_admin():
                 main_page_admin()
 
         elif menu_choice_5 == '3':    # hapus presensi karyawan
+            os.system('cls')
+            print("admin>menu utama>hapus presensi karyawan>\n=============== MENU HAPUS PRESENSI KARYAWAN ===============\nmenampilkan keseluruhan data...\n")
+            data_presensi = []
+            with open('presensi_database.csv') as csvfile_presensi:
+                reader_presensi = csv.reader(csvfile_presensi)
+                for row in reader_presensi:
+                    data_presensi.append(row)
+            df = pd.DataFrame(data_presensi, columns=kolom_presensi)
+            print(df)
+            masukkan_tanggal_presensi = str(input("\nMasukkan tanggal yang dicari :"))
 
-            # tulis kode disini
- 
-            print("Press [enter] to back to Main Menu")
-            return
+            filtered_df = df.loc[df['Tanggal'].str.contains(masukkan_tanggal_presensi)]        
+            print(filtered_df)
+
+            masukkan_hapus_presensi = input("\nMasukkan index yang hendak dihapus : ")
+            if int(masukkan_hapus_presensi) in range(len(df)):
+                df = df.drop(int(masukkan_hapus_presensi))
+                np.savetxt("presensi_database.csv",df,delimiter=',',fmt='% s')
+                print(f"\nData {masukkan_hapus_presensi} berhasil dihapus!\nData saat ini :\n\n{df}")
+            else:
+                input("Kesalahan input atau data tidak ada")
+            input("Tekan [enter] untuk kembali ke Main Menu")
         else:
             main_page_admin()
 
