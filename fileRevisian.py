@@ -5,7 +5,7 @@ import numpy as np          # import numpy
 from pathlib import Path    # import modul path
 
 
-# HALAMAN LOGIN-----------------------------------------------------------------------------------------------------------------------------------------------
+# HALAMAN LOGIN DAN LAUNCH PAGE ------------------------------------------------------------------------------------------------------------------------------
 def launchPage():
     launch_page_condition = True
     while launch_page_condition:
@@ -72,13 +72,21 @@ def launchPage():
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-# HALAMAN UTAMA ADMIN-----------------------------------------------------------------------------------------------------------------------------------------
+# HALAMAN UTAMA ADMIN ----------------------------------------------------------------------------------------------------------------------------------------
 
 def main_page_admin():
     os.system('cls')
     print('admin>menu utama\n=============== ADMIN MENU ===============')    # mengucapkan selamat datang
+
+    data_employee = []
+    with open('employee_account_database.csv') as csvfile_employee:
+        reader_employee = csv.reader(csvfile_employee)
+        for row in reader_employee:
+            data_employee.append(row)
+    employee_column = [y[0] for y in data_employee]
+
     data_admin = []
-    with open('admin_account_database.csv') as csvfile_admin:       # mendeteksi nama kita untuk ditampilkan di ucapan sepamat datang
+    with open('admin_account_database.csv') as csvfile_admin:       # mendeteksi nama kita untuk ditampilkan di ucapan selamat datang
         reader_Admin = csv.reader(csvfile_admin)
         for row in reader_Admin:
             data_admin.append(row)
@@ -91,28 +99,55 @@ def main_page_admin():
     menu_choice = input("\nPilih menu : ")
     print()
 
-    if menu_choice == '1':          # menu tambahkan orang, terdiri dari tambahkan admin, tambahkan karyawan
-        menu_choice_1 = input("[1]Tambahkan Admin\n[2]Tambahkan Karyawan\nPilih menu : ")
-        if menu_choice_1 == '1':    # submenu tambahkan admin
+    if menu_choice == '1':          # FITUR 1 TAMBAHKAN ORANG
+        menu_choice_1 = input("[1] Tambahkan Admin\n[2] Tambahkan Karyawan\nPilih menu : ")
+        if menu_choice_1 == '1':    # FITUR 1.1 TAMBAHKAN ORANG>TAMBAHKAN ADMIN
             os.system('cls')
-            masukan_tambah_admin = input("admin>menu utama>tambahkan orang>tambahkan admin\n=============== MENU TAMBAHKAN ADMIN ===============\n\nMasukkan data admin [ID,Nama,Posisi,Bidang] : ")
-            file = open('admin_account_database.csv','a')       # file handling untuk append data
-            file.write(masukan_tambah_admin)
-            file.write('\n')
-            file.close
-            input("Data admin berhasil ditambahkan!\nPress [enter] to back to Main Menu")      # back to main menu
+            print("admin>menu utama>tambahkan orang>tambahkan admin\n=============== MENU TAMBAHKAN ADMIN ===============\n")
+            masukkanAdminID = input("Masukkan ID admin : ")
+            if masukkanAdminID not in admin_column:
+                masukkanAdminNama = input("Masukkan nama admin : ")
+                masukkanAdminPosisi = input("Masukkan posisi admin : ")
+                masukkanAdminBidang = input("Masukkan bidang admin : ")
+                masukan_tambah_admin = [masukkanAdminID.upper(),masukkanAdminNama.upper(),masukkanAdminPosisi.upper(),masukkanAdminBidang.upper()]
+                # Menambahkan data baru ke dalam list data admin
+                data_admin.append(masukan_tambah_admin)
+                # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                with open('admin_account_database.csv', 'w', newline='') as csvfile_admin:
+                    writer_admin = csv.writer(csvfile_admin)
+                    writer_admin.writerows(data_admin)
+                input(f'\nData baru : {masukkanAdminID.upper()},{masukkanAdminNama.upper()},{masukkanAdminPosisi.upper()},{masukkanAdminBidang.upper()}\nPERHATIAN : Data admin berhasil ditambahkan!\n\nTekan [enter] untuk kembali ke menu utama')
+            else:
+                input(f'\nPERHATIAN : Data admin "{masukkanAdminID}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             main_page_admin()
-        elif menu_choice_1 == '2':  # submenu tambahkan karyawan
+        # FITUR 1.1 SELESAI
+
+        elif menu_choice_1 == '2':  # FITUR 1.2 TAMBAHKAN ORANG>TAMBAHKAN KARYAWAN
             os.system('cls')
-            masukan_tambah_karyawan = input("admin>menu utama>tambahkan orang>tambahkan karyawan\n=============== MENU TAMBAHKAN KARYAWAN ===============\n\nMasukkan data karyawan [ID,Nama,Posisi,Shift 1,Shift 2,Shift 3] : ")
-            file = open('employee_account_database.csv','a')    # file handling untuk append data
-            file.write(masukan_tambah_karyawan)
-            file.write('\n')
-            file.close
-            input("Data karyawan berhasil ditambahkan!\nPress [enter] to back to Main Menu")   # back to main menu
+            print("admin>menu utama>tambahkan orang>tambahkan karyawam\n=============== MENU TAMBAHKAN KARYAWAN ===============\n")
+            masukkanKaryawanID = input("Masukkan ID karyawan : ")
+            if masukkanKaryawanID not in employee_column :
+                masukkanKaryawanNama = input("Masukkan nama karyawan : ")
+                masukkanKaryawanPosisi = input("Masukkan posisi karyawan : ")
+                masukkanKaryawanShift1 = input("Masukkan apakah karyawan bertugas Shift 1 (True/False) : ")
+                masukkanKaryawanShift2 = input("Masukkan apakah karyawan bertugas Shift 2 (True/False) : ")
+                masukkanKaryawanShift3 = input("Masukkan apakah karyawan bertugas Shift 3 (True/False) : ")
+                masukan_tambah_karyawan = [masukkanKaryawanID.upper(),masukkanKaryawanNama.upper(),masukkanKaryawanPosisi.upper(),masukkanKaryawanShift1.capitalize(),masukkanKaryawanShift2.capitalize(),masukkanKaryawanShift3.capitalize()]
+                # Menambahkan data baru ke dalam list data karyawan
+                data_employee.append(masukan_tambah_karyawan)
+                # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                with open('employee_account_database.csv', 'w', newline='') as csvfile_employee:
+                    writer_employee = csv.writer(csvfile_employee)
+                    writer_employee.writerows(data_employee)
+                input(f'\nData baru : {masukkanKaryawanID.upper()},{masukkanKaryawanNama.upper()},{masukkanKaryawanPosisi.upper()},{masukkanKaryawanShift1.capitalize()},{masukkanKaryawanShift2.capitalize()},{masukkanKaryawanShift3.capitalize()}\nPERHATIAN : Data karyawan berhasil ditambahkan!\n\nTekan [enter] untuk kembali ke menu utama')
+            else:
+                input(f'\nPERHATIAN : Data karyawan "{masukkanKaryawanID}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             main_page_admin()
-        else:                       # submenu : salah input jadi balik ke menu
+        # FITUR 1.2 SELESAI
+
+        else:                       # FITUR 1.3 BILA SALAH KEMBALI KE MENU UTAMA KARYAWAN
             main_page_admin()
+    # FITUR 1 SELESAI
 
     elif menu_choice == '2':        # menu edit data, terdiri dari edit data admin, edit data karyawan
         menu_choice_2 = input("[1] Edit Data Admin\n[2] Edit Data Karyawan\nPilih menu : ")
@@ -364,11 +399,11 @@ def main_page_admin():
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-# HALAMAN UTAMA PEKERJA---------------------------------------------------------------------------------------------------------------------------------------
+# HALAMAN UTAMA PEKERJA --------------------------------------------------------------------------------------------------------------------------------------
 
 def main_page_employee():
     os.system('cls')
-    print('=============== EMPLOYEE MENU ===============')    # mengucapkan selamat datang
+    print('karyawan>menu utama\n=============== EMPLOYEE MENU ===============')    # mengucapkan selamat datang
     data_employee = []
     with open('employee_account_database.csv') as csvfile_employee:
         reader_employee = csv.reader(csvfile_employee)
@@ -379,67 +414,78 @@ def main_page_employee():
         for x in range(0,len(data_employee)):
             if launch_ID == data_employee[x][0]:
                 tujuan = x
-                print(f"Selamat Datang, karyawan {data_employee[x][1]}!\n")
+                print(f'Selamat Datang, karyawan "{data_employee[x][1]}"!\n')
     data_presensi = []
     with open('presensi_database.csv') as csvfile_presensi:
         reader_presensi = csv.reader(csvfile_presensi)
         for row in reader_presensi:
             data_presensi.append(row)
-    print('\nMenu:\n[1] PRESENSI SEKARANG!\n[2] Lihat Jadwal Shift\n[3] Lihat Rekapitulasi Presensi\n[4] Informasi Mengenai Shift\n[5] Keluar')
+    print('\nMenu:\n[1] PRESENSI SEKARANG!\n[2] Lihat Jadwal Shift\n[3] Lihat Rekapitulasi Presensi\n[4] Lihat Data Presensi Anda\n[5] Informasi Mengenai Shift\n[6] Keluar')
     menu_choice = input("Pilih menu : ")
 
     if menu_choice == '1':    # FITUR 1 PRESENSI SEKARANG
-        tanggal_presensi = input("Masukkan Tanggal Hari Ini [yyyy-mm-dd] : ")
+        tanggal_presensi = input("\nMasukkan Tanggal Hari Ini [yyyy-mm-dd] : ")
         repeat_menu_choice_1 = True
         while repeat_menu_choice_1 :
-            menu_choice_1 = input("Pilih Shift:\n[1] Pagi\n[2] Siang\n[3] Malam\n[4] Kembali Ke Menu\nPilih menu : ")
+            
+            menu_choice_1 = input("\nPilih Shift:\n[1] Pagi\n[2] Siang\n[3] Malam\n[4] Kembali Ke Menu\nPilih menu : ")
             if menu_choice_1 == '1':            # FITUR 1.1 PRESENSI SEKARANG>SHIFT PAGI
                 repeat_menu_choice_1 = False
-                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1], 'PAGI']
-                # Menambahkan data baru ke dalam list data_presensi
-                data_presensi.append(data_baru)
-                # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
-                    writer_presensi = csv.writer(csvfile_presensi)
-                    writer_presensi.writerows(data_presensi)
-                input("Tekan [enter] untuk kembali ke meu utama")
+                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'PAGI','HADIR']
+                if data_baru not in data_presensi:
+                    # Menambahkan data baru ke dalam list data_presensi
+                    data_presensi.append(data_baru)
+                    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
+                        writer_presensi = csv.writer(csvfile_presensi)
+                        writer_presensi.writerows(data_presensi)
+                    input(f'\nPresensi : {tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,HADIR\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
+                else:
+                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,HADIR" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             elif menu_choice_1 == '2':          # FITUR 1.2 PRESENSI SEKARANG>SHIFT SIANG
                 repeat_menu_choice_1 = False
-                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1], 'SIANG']
-                # Menambahkan data baru ke dalam list data_presensi
-                data_presensi.append(data_baru)
-                # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
-                    writer_presensi = csv.writer(csvfile_presensi)
-                    writer_presensi.writerows(data_presensi)
-                input("Tekan [enter] untuk kembali ke meu utama")
+                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1], 'SIANG','HADIR']
+                if data_baru not in data_presensi:
+                    # Menambahkan data baru ke dalam list data_presensi
+                    data_presensi.append(data_baru)
+                    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
+                        writer_presensi = csv.writer(csvfile_presensi)
+                        writer_presensi.writerows(data_presensi)
+                    input(f'\nPresensi : {tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,HADIR"\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
+                else:
+                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,HADIR" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             elif menu_choice_1 == '3':          # FITUR 1.3 PRESENSI SEKARANG>SHIFT MALAM
                 repeat_menu_choice_1 = False
-                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1], 'MALAM']
-                # Menambahkan data baru ke dalam list data_presensi
-                data_presensi.append(data_baru)
-                # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
-                    writer_presensi = csv.writer(csvfile_presensi)
-                    writer_presensi.writerows(data_presensi)
-                input("Tekan [enter] untuk kembali ke meu utama")
-            elif menu_choice_1 == '4':          # kembali ke menu utama karyawan
+                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1], 'MALAM','HADIR']
+                if data_baru not in data_presensi:
+                    # Menambahkan data baru ke dalam list data_presensi
+                    data_presensi.append(data_baru)
+                    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
+                        writer_presensi = csv.writer(csvfile_presensi)
+                        writer_presensi.writerows(data_presensi)
+                    input(f'\nPresensi : {tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,HADIR"\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
+                else:
+                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,HADIR" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
+            elif menu_choice_1 == '4':          # FITUR 1.4 PRESENSI SEKARANG>KEMBALI KE MENU UTAMA
                 repeat_menu_choice_1 = False
-            else:                               # salah input, ulang lagi
+            else:                               # SALAH INPUT, COBA LAGI
                 repeat_menu_choice_1 = True
 
             main_page_employee()
-
+    # FITUR 1 SELESAI
 
     elif menu_choice == '2':
 
         os.system('cls')  # Membersihkan layar konsol
-        # Baca jadwal shift dari file atau sumber data lainnya
-        with open('presensi_database.csv', 'r') as jadwal_file:
-            jadwal_shift = jadwal_file.read()
-         # Cetak jadwal shift ke layar
-        print("Jadwal Shift Karyawan:")
-        print(jadwal_shift)
+        # print("karyawan>menu utama>lihat jadwal shift\n=============== MENU LIHAT JADWAL SHIFT ANDA ===============")
+        # # Baca jadwal shift dari file atau sumber data lainnya
+        # with open('presensi_database.csv', 'r') as jadwal_file:
+        #     jadwal_shift = jadwal_file.read()
+        #  # Cetak jadwal shift ke layar
+        # print("Jadwal Shift Karyawan:")
+        # print(jadwal_shift)
 
         input(print("Press anykey to continue"))
         main_page_employee()
@@ -447,38 +493,59 @@ def main_page_employee():
     elif menu_choice == '3':
 
         os.system('cls')
-        with open('presensi_database.csv', 'r') as presensi_file:
-            data_presensi = presensi_file.readlines()
+        # with open('presensi_database.csv', 'r') as presensi_file:
+        #     data_presensi = presensi_file.readlines()
     
-        total_kehadiran = len(data_presensi)
-        total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
+        # total_kehadiran = len(data_presensi)
+        # total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
 
-        persentase_kehadiran = (total_kehadiran / total_hari_kerja) * 100
+        # persentase_kehadiran = (total_kehadiran / total_hari_kerja) * 100
     
-        print('\n================ REKAPITULASI ABSENSI ================')
+        # print('\n================ REKAPITULASI ABSENSI ================')
 
-        # Membuat DataFrame Pandas dari data presensi
-        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi], columns=["Tanggal","Shift"])
+        # # Membuat DataFrame Pandas dari data presensi
+        # df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi], columns=["Tanggal","Shift"])
     
-        # Menampilkan DataFrame sebagai tabel
-        print(df)
+        # # Menampilkan DataFrame sebagai tabel
+        # print(df)
     
-        print(f"Total Kehadiran: {total_kehadiran}")
-        print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
+        # print(f"Total Kehadiran: {total_kehadiran}")
+        # print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
     
         input("Press any key to continue")
         main_page_employee()
 
-    elif menu_choice == '4':
+    elif menu_choice == '5':
+        os.system('cls')
+        eula_text = """
+    End User License Agreement (EULA)
+    
+    Terima kasih telah menggunakan program kami.
+    Mohon baca dan pahami syarat-syarat berikut sebelum melanjutkan:
+    
+    1. Program ini hanya boleh digunakan oleh karyawan yang sah dan telah terdaftar dalam sistem kami.
+    2. Penggunaan program ini untuk tujuan selain yang telah ditentukan dilarang.
+    3. Setiap aktivitas yang terekam dalam program berkaitan dengan pengguna yang bersangkutan akan menjadi tanggung jawab yang bersangkutan.
+    4. Kami akan menyimpan data yang terkait dengan penggunaan program ini sesuai dengan kebijakan kami.
 
-        #print eula
+    Tata Cara Pemakaian Admin:
+    a. Masukkan ID admin dan password pada halaman login admin.
+    b. Pilih menu yang sesuai dengan tugas admin (tambah karyawan, hapus karyawan, lihat rekap presensi, dll.)
+    
+    Tata Cara Pemakaian Karyawan:
+    a. Masukkan ID karyawan dan password pada halaman login.
+    b. Pilih menu yang diinginkan untuk melanjutkan (presensi, lihat jadwal, lihat rekap absensi, dll.).
+
+    
+    Dengan melanjutkan, Anda menyetujui semua syarat dan ketentuan diatas."""
         
-        input(print("Press anykey to continue"))
+        print(eula_text)
+        input("\nTekan [enter] untuk kembali ke menu utama")
         main_page_employee()
     
-    elif menu_choice == '5':        # kembali ke login page
+    elif menu_choice == '6':        # kembali ke login page
         launch_page_condition =True
-        return
+        launchPage()
 
     else:
         main_page_employee()
