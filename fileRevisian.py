@@ -445,7 +445,7 @@ def main_page_admin():
 
 # HALAMAN UTAMA PEKERJA --------------------------------------------------------------------------------------------------------------------------------------
 
-def main_page_employee():
+def main_page_employee():   # FITUR KARYAWAN
     os.system('cls')
     print('karyawan>menu utama\n=============== EMPLOYEE MENU ===============')    # mengucapkan selamat datang
     data_employee = []
@@ -464,7 +464,7 @@ def main_page_employee():
         reader_presensi = csv.reader(csvfile_presensi)
         for row in reader_presensi:
             data_presensi.append(row)
-    print('\nMenu:\n[1] PRESENSI SEKARANG!\n[2] Lihat Jadwal Shift\n[3] Lihat Rekapitulasi Presensi\n[4] Lihat Data Presensi Anda\n[5] Informasi Mengenai Shift\n[6] Keluar')
+    print('\nMenu:\n[1] PRESENSI SEKARANG!\n[2] Lihat Jadwal Shift\n[3] Lihat Rekapitulasi Presensi\n[4] Lihat Data Presensi Anda\n[5] Informasi Mengenai Program\n[6] Keluar')
     menu_choice = input("Pilih menu : ")
 
     if menu_choice == '1':    # FITUR 1 PRESENSI SEKARANG
@@ -520,107 +520,94 @@ def main_page_employee():
             main_page_employee()
     # FITUR 1 SELESAI
 
-    elif menu_choice == '2':
+    elif menu_choice == '2':  # FITUR 2 LIHAT JADWAL SHIFT ANDA
+        os.system('cls')  # Membersihkan layar konsol
+        print("karyawan>menu utama>lihat jadwal shift\n=============== MENU LIHAT JADWAL SHIFT ANDA ===============\n")
+        with open('employee_account_database.csv', 'r') as presensi_file:
+            data_presensi = presensi_file.readlines()
+        total_kehadiran = len(data_presensi)
+        total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
+        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
+        columns=['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3'])
+        # Filter DataFrame berdasarkan ID yang sudah login
+        filtered_df = df.loc[df['ID'] == launch_ID]
+        # Menampilkan DataFrame yang sudah difilter sebagai tabel
+        print(filtered_df.to_string(index=False))
+        input("\nTekan [enter] untuk kembali ke Main Menu")
+        main_page_employee()
+    # FITUR 2 SELESAI
+
+    elif menu_choice == '3':  # FITUR 3 REKAPITULASI PRESENSI
+        os.system('cls')
+        with open('presensi_database.csv', 'r') as presensi_file:
+            data_presensi = presensi_file.readlines()
+        total_kehadiran = len(data_presensi)
+        total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
+        persentase_kehadiran = (total_kehadiran / total_hari_kerja) * 100
+        print('\nkaryawan>menu utama>rekapitulasi presensi\n================ REKAPITULASI PRESENSI ================\n')
+        # Membuat DataFrame Pandas dari data presensi
+        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi], columns=["Tanggal", "ID", "Nama", "Shift","Kehadiran"])
+        # Filter DataFrame berdasarkan ID yang sudah login
+        filtered_df = df.loc[df['ID'] == launch_ID]
+        # Menampilkan DataFrame yang sudah difilter sebagai tabel
+        print(filtered_df)
+        print(f"\nTotal Kehadiran: {len(filtered_df)}")
+        print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
+        input("\nTekan [enter] untuk kembali ke Main Menu")
+        main_page_employee()
+    # FITUR 3 SELESAI
+
+    elif menu_choice == '4':  # FITUR 4 LIHAT DATA PRESENSI ANDA
 
         os.system('cls')  # Membersihkan layar konsol
-        # print("karyawan>menu utama>lihat jadwal shift\n=============== MENU LIHAT JADWAL SHIFT ANDA ===============")
-        # # Baca jadwal shift dari file atau sumber data lainnya
-        # with open('presensi_database.csv', 'r') as jadwal_file:
-        #     jadwal_shift = jadwal_file.read()
-        #  # Cetak jadwal shift ke layar
-        # print("Jadwal Shift Karyawan:")
-        # print(jadwal_shift)
-
-        input(print("Press anykey to continue"))
+        print("karyawan>menu utama>lihat data presensi anda\n=============== MENU LIHAT DATA PRESENSI ANDA ===============\n")
+        with open('presensi_database.csv', 'r') as presensi_file:
+            data_presensi = presensi_file.readlines()
+        total_kehadiran = len(data_presensi)
+        total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
+        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
+        columns=["Tanggal", "ID", "Nama", "Shift","kehadiran"])
+        # Filter DataFrame berdasarkan ID yang sudah login
+        filtered_df = df.loc[df['ID'] == launch_ID]
+        # Menampilkan DataFrame yang sudah difilter sebagai tabel
+        print(filtered_df)
+        input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
+    # FITUR 4 SELESAI
 
-    elif menu_choice == '3':
-
-        # os.system('cls')
-        # with open('presensi_database.csv', 'r') as presensi_file:
-        #     data_presensi = presensi_file.readlines()
-
-        # total_kehadiran = len(data_presensi)
-        # total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
-
-        # persentase_kehadiran = (total_kehadiran / total_hari_kerja) * 100
-
-        # print('\n================ REKAPITULASI ABSENSI ================')
-
-        # # Membuat DataFrame Pandas dari data presensi
-        # df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
-        # columns=["Tanggal", "ID", "Nama", "Shift"])
-
-        # # Filter DataFrame berdasarkan ID yang sudah login
-        # filtered_df = df.loc[df['ID'] == launch_ID]
-
-        # # Menampilkan DataFrame yang sudah difilter sebagai tabel
-        # print(filtered_df)
-
-        # print(f"Total Kehadiran: {len(filtered_df)}")
-        # print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
-
-        input("Press any key to continue")
-        main_page_employee()
-
-    elif menu_choice == '3':
-
-        # os.system('cls')
-        # with open('presensi_database.csv', 'r') as presensi_file:
-        #     data_presensi = presensi_file.readlines()
-
-        # total_kehadiran = len(data_presensi)
-        # total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
-
-        # persentase_kehadiran = (total_kehadiran / total_hari_kerja) * 100
-
-        # print('\n================ REKAPITULASI ABSENSI ================')
-
-        # # Membuat DataFrame Pandas dari data presensi
-        # df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
-        # columns=["Tanggal", "ID", "Nama", "Shift"])
-
-        # # Filter DataFrame berdasarkan ID yang sudah login
-        # filtered_df = df.loc[df['ID'] == launch_ID]
-
-        # # Menampilkan DataFrame yang sudah difilter sebagai tabel
-        # print(filtered_df)
-
-        # print(f"Total Kehadiran: {len(filtered_df)}")
-        # print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
-
-        input("Press any key to continue")
-        main_page_employee()
-
-    elif menu_choice == '5':
+    elif menu_choice == '5':  # FITUR 5 EULA
         os.system('cls')
         eula_text = """
-    End User License Agreement (EULA)
-    
-    Terima kasih telah menggunakan program kami.
-    Mohon baca dan pahami syarat-syarat berikut sebelum melanjutkan:
-    
-    1. Program ini hanya boleh digunakan oleh karyawan yang sah dan telah terdaftar dalam sistem kami.
-    2. Penggunaan program ini untuk tujuan selain yang telah ditentukan dilarang.
-    3. Setiap aktivitas yang terekam dalam program berkaitan dengan pengguna yang bersangkutan akan menjadi tanggung jawab yang bersangkutan.
-    4. Kami akan menyimpan data yang terkait dengan penggunaan program ini sesuai dengan kebijakan kami.
+        End User License Agreement (EULA)
+        
+        Terima kasih telah menggunakan program kami.
+        Mohon baca dan pahami syarat-syarat berikut sebelum melanjutkan:
+        
+        1. Program ini hanya boleh digunakan oleh karyawan yang sah dan telah terdaftar dalam sistem kami.
+        2. Dilarang menggunakan program ini untuk tujuan selain yang telah ditentukan.
+        3. Setiap aktivitas yang terekam dalam program berkaitan dengan pengguna yang bersangkutan menjadi tanggung jawab yang bersangkutan.
+        4. Kami akan menyimpan data yang terkait dengan penggunaan program ini sesuai dengan kebijakan.
+        5. DILARANG mengubah dan memodifikasi program ini kemudian mendistribusikannya tanpa seijin kami
+        6. Pengguna bisa menggunakan Program ini pada perangkat komputer mana saja [linux, Windows, MacOS(dengan kode yang disesuaikan)]
 
-    Tata Cara Pemakaian Admin:
-    a. Masukkan ID admin dan password pada halaman login admin.
-    b. Pilih menu yang sesuai dengan tugas admin (tambah karyawan, hapus karyawan, lihat rekap presensi, dll.)
-    
-    Tata Cara Pemakaian Karyawan:
-    a. Masukkan ID karyawan dan password pada halaman login.
-    b. Pilih menu yang diinginkan untuk melanjutkan (presensi, lihat jadwal, lihat rekap absensi, dll.).
+        Tata Cara Operasi Program Sebagai Admin:
+        a. Apabila Merupakan Admin Pertama, buat akun terlebih dahulu sesuai urutan yang telah disediakan.
+        b. Masukkan ID admin dan password pada halaman login admin.
+        c. Pilih menu yang sesuai dengan tugas admin (tambah karyawan, hapus karyawan, lihat rekap presensi, dll.)
+        
+        Tata Cara Pemakaian Karyawan:
+        a. Masukkan ID karyawan dan password pada halaman login.
+        b. Pilih menu yang diinginkan untuk melanjutkan (presensi, lihat jadwal, lihat rekap absensi, dll.).
 
-    
-    Dengan melanjutkan, Anda menyetujui semua syarat dan ketentuan diatas."""
+        
+        Dengan melanjutkan, Anda menyetujui semua syarat dan ketentuan diatas."""
         
         print(eula_text)
-        input("\nTekan [enter] untuk kembali ke menu utama")
+        input("\n        Tekan [enter] untuk kembali ke menu utama")
         main_page_employee()
-    
-    elif menu_choice == '6':        # FITUR 6 KELUAR
+    # FITUR 5 SELESAI
+
+    elif menu_choice == '6':  # FITUR 6 KELUAR
         launch_page_condition = True
         launchPage()
     # FITUR 6 SELESAI
@@ -629,43 +616,49 @@ def main_page_employee():
         main_page_employee()
     os.system('cls')
 
+# FITUR KARYAWAN SELESAI
+
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # MEMBUKA FILE UNTUK PERTAMA KALINYA--------------------------------------------------------------------------------------------------------------------------
 
-os.system('cls')
+def akun_pertama():
+    os.system('cls')
 
-# apabila database akun karyawan belum ada
-if not(Path('employee_account_database.csv').is_file()):
-    #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-    employee = open('employee_account_database.csv', 'w')
-    employee.close()
+    # apabila database akun karyawan belum ada
+    if not(Path('employee_account_database.csv').is_file()):
+        #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
+        employee = open('employee_account_database.csv', 'w')
+        employee.close()
 
-# apabila database presensi belum ada
-if not(Path('presensi_database.csv').is_file()):
-    #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-    presensi = open('presensi_database.csv', 'w')
-    presensi.close()
+    # apabila database presensi belum ada
+    if not(Path('presensi_database.csv').is_file()):
+        #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
+        presensi = open('presensi_database.csv', 'w')
+        presensi.close()
 
-# apabila database admin belum ada
-if not(Path('admin_account_database.csv').is_file()):
-    #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
+    # apabila database admin belum ada
+    if not(Path('admin_account_database.csv').is_file()):
+        #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
 
-    first_account_ID     = str(input("Anda adalah admin pertama. Masukkan ID anda : "))
-    first_account_nama   = str(input("Masukkan Nama anda : "))
-    first_account_posisi = str(input("Masukkan Posisi anda : "))
-    first_account_bidang = str(input("Masukkan bidang divisi anda : "))
+        first_account_ID     = str(input("Anda adalah admin pertama. Masukkan ID anda : "))
+        first_account_nama   = str(input("Masukkan Nama anda : "))
+        first_account_posisi = str(input("Masukkan Posisi anda : "))
+        first_account_bidang = str(input("Masukkan bidang divisi anda : "))
 
-    first_input = f"{first_account_ID},{first_account_nama},{first_account_posisi},{first_account_bidang}"
+        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},{first_account_bidang.upper()}"
 
-    with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
-        admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
-        admin_list.writeheader()
+        with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
+            admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
+            admin_list.writeheader()
+# FITUR AKUN PERTAMA SELESAI
 
 kolom_admin = ['ID','Nama','Posisi','Bidang']
 kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3']
 kolom_presensi = ['Tanggal','ID', 'Nama','Shift','kehadiran']
 
-launchPage()
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+akun_pertama()
+launchPage()
