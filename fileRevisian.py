@@ -563,6 +563,35 @@ def main_page_employee():
         input("Press any key to continue")
         main_page_employee()
 
+    elif menu_choice == '3':
+
+        # os.system('cls')
+        # with open('presensi_database.csv', 'r') as presensi_file:
+        #     data_presensi = presensi_file.readlines()
+
+        # total_kehadiran = len(data_presensi)
+        # total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
+
+        # persentase_kehadiran = (total_kehadiran / total_hari_kerja) * 100
+
+        # print('\n================ REKAPITULASI ABSENSI ================')
+
+        # # Membuat DataFrame Pandas dari data presensi
+        # df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
+        # columns=["Tanggal", "ID", "Nama", "Shift"])
+
+        # # Filter DataFrame berdasarkan ID yang sudah login
+        # filtered_df = df.loc[df['ID'] == launch_ID]
+
+        # # Menampilkan DataFrame yang sudah difilter sebagai tabel
+        # print(filtered_df)
+
+        # print(f"Total Kehadiran: {len(filtered_df)}")
+        # print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
+
+        input("Press any key to continue")
+        main_page_employee()
+
     elif menu_choice == '5':
         os.system('cls')
         eula_text = """
@@ -591,11 +620,12 @@ def main_page_employee():
         input("\nTekan [enter] untuk kembali ke menu utama")
         main_page_employee()
     
-    elif menu_choice == '6':        # kembali ke login page
-        launch_page_condition =True
+    elif menu_choice == '6':        # FITUR 6 KELUAR
+        launch_page_condition = True
         launchPage()
+    # FITUR 6 SELESAI
 
-    else:
+    else:       # BILA SALAH INPUT
         main_page_employee()
     os.system('cls')
 
