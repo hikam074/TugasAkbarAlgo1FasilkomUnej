@@ -9,9 +9,6 @@ from pathlib import Path    # import modul path
 def launchPage():
     launch_page_condition = True
     while launch_page_condition:
-        kolom_admin = ['ID','Nama','Posisi','Bidang']
-        kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3']
-        kolom_presensi = ['Tanggal','ID', 'Nama','Shift']
 
         os.system('cls')
         print("=============== WELCOME TO LAUNCH PAGE ===============")
@@ -149,9 +146,9 @@ def main_page_admin():
             main_page_admin()
     # FITUR 1 SELESAI
 
-    elif menu_choice == '2':        # menu edit data, terdiri dari edit data admin, edit data karyawan
+    elif menu_choice == '2':        # FITUR 2 EDIT DATA 
         menu_choice_2 = input("[1] Edit Data Admin\n[2] Edit Data Karyawan\nPilih menu : ")
-        if menu_choice_2 == '1':    # edit data admin
+        if menu_choice_2 == '1':    # FITUR 2.1 EDIT DATA>EDIT DATA ADMIN
             os.system('cls')
             data_admin = []
             with open('admin_account_database.csv') as csvfile_admin:       # membuka data admin dari csv ke list
@@ -159,22 +156,39 @@ def main_page_admin():
                 for row in reader_Admin:
                     data_admin.append(row)
             df = pd.DataFrame(data_admin, columns=kolom_admin) 
-            masukan_edit_admin = input(f"admin>menu utama>edit data>edit data admin\n=============== MENU EDIT DATA ADMIN ===============\n\n{df}\n\nMasukkan ID admin yang hendak diubah : ")
+            masukan_edit_admin = input(f"admin>menu utama>edit data>edit data admin\n=============== MENU EDIT DATA ADMIN ===============\ndata saat ini:\n\n{df}\n\nMasukkan ID admin yang hendak diubah : ")
             if masukan_edit_admin in df['ID'].values:
                 baris_admin = df[df['ID'] == masukan_edit_admin]  # Menemukan baris yang sesuai dengan ID
-                print(f"Data yang akan diedit : \n{baris_admin}")
+                print(f"\nData yang akan diedit : \n{baris_admin.to_string(index=False, header=False)}\n")
                 IDBaru     = input("Masukkan ID baru: ")
                 namaBaru   = input("Masukkan nama baru: ")
                 posisiBaru = input("Masukkan posisi baru: ")
                 bidangBaru = input("Masukkan bidang baru: ")
-                df.iloc[baris_admin.index, 0:4] = IDBaru,namaBaru,posisiBaru,bidangBaru
+                if IDBaru == '':
+                    pass
+                else:
+                    df.iloc[baris_admin.index, 0] = IDBaru.upper()
+                if namaBaru == '':
+                    pass
+                else:
+                    df.iloc[baris_admin.index, 1] = namaBaru.upper()
+                if posisiBaru == '':
+                    pass
+                else:
+                    df.iloc[baris_admin.index, 2] = posisiBaru.upper()
+                if bidangBaru == '':
+                    pass
+                else:
+                    df.iloc[baris_admin.index, 3] = bidangBaru.upper()
                 np.savetxt('admin_account_database.csv',df,delimiter=',',fmt='%s')
                 print(f'\nData baru "{masukan_edit_admin}" telah diubah!\n\nData saat ini :\n{df}\n')
             else:
-                print(f"{masukan_edit_admin} tidak ada dalam database.")
-            input("Press [enter] to back to Main Menu")    # back to main menu
+                print(f'PERHATIAN : "{masukan_edit_admin}" tidak ada dalam database!')
+            input("Tekan [enter] untuk kembali ke menu utama")    # back to main menu
             main_page_admin()
-        elif menu_choice_2 == '2':  # edit data karyawan
+        # FITUR 2.1 SELESAI
+
+        elif menu_choice_2 == '2':  # FITUR 2.2 EDIT DATA>EDIT DATA KARYAWAN
             os.system('cls')
             data_employee = []
             with open('employee_account_database.csv') as csvfile_employee:       # membuka data employee dari csv ke list
@@ -185,32 +199,62 @@ def main_page_admin():
             masukan_edit_employee = input(f"admin>menu utama>edit data>edit data karyawan\n=============== MENU EDIT DATA KARYAWAN ===============\n\n{df}\n\nMasukkan ID karyawan yang hendak diubah : ")
             if masukan_edit_employee in df['ID'].values:
                 baris_employee = df[df['ID'] == masukan_edit_employee]  # Menemukan baris yang sesuai dengan ID
-                edit_employee_profil = input(f"Data yang akan diedit : \n\n{baris_employee}\n\nPilih [1] untuk mengedit data profil karyawan atau [2] untuk mengubah shift karyawan : ")
-                if edit_employee_profil == '1':
+                edit_employee_profil = input(f"\nData yang akan diedit : \n{baris_employee.to_string(index=False, header=False)}\n\nPilih [1] untuk mengedit data profil karyawan atau [2] untuk mengubah shift karyawan : ")
+                if edit_employee_profil == '1':     # FITUR 2.2.1 EDIT DATA>EDIT DATA KARYAWAN>EDIT DATA PROFIL
                     IDBaru = input("Masukkan ID baru: ")
                     namaBaru = input("Masukkan nama baru: ")
                     posisiBaru = input("Masukkan posisi baru: ")
-                    df.iloc[baris_employee.index, 0:3] = IDBaru,namaBaru,posisiBaru
+                    if IDBaru == '':
+                        pass
+                    else:
+                        df.iloc[baris_employee.index, 0] = IDBaru.upper()
+                    if namaBaru == '':
+                        pass
+                    else:
+                        df.iloc[baris_employee.index, 1] = namaBaru.upper()
+                    if posisiBaru == '':
+                        pass
+                    else:
+                        df.iloc[baris_employee.index, 2] = posisiBaru.upper()
                     np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='%s')
                     print(f'\nData baru untuk "{df.iloc[baris_employee.index, 0:3].to_string(header=False,index=False)}" telah diubah!\n\nData saat ini :\n{df}\n')
-                elif edit_employee_profil == '2':
+                # FITUR 2.2.1 SELESAI
+
+                elif edit_employee_profil == '2':   # FITUR 2.2.2 EDIT DATA>EDIT DATA KARYAWAN>EDIT DATA SHIFT
                     shift1Baru = input("Masukkan shift 1 baru: ")
                     shift2Baru = input("Masukkan shift 2 baru: ")
-                    shift3Baru = input("Masukkan shift3 baru: ")
-                    df.iloc[baris_employee.index, 3:6] = shift1Baru,shift2Baru,shift3Baru
+                    shift3Baru = input("Masukkan shift 3 baru: ")
+                    if shift1Baru == '':
+                        pass
+                    else:
+                        df.iloc[baris_employee.index, 3] = shift1Baru.capitalize()
+                    if shift2Baru == '':
+                        pass
+                    else:
+                        df.iloc[baris_employee.index, 4] = shift2Baru.capitalize()
+                    if shift3Baru == '':
+                        pass
+                    else:
+                        df.iloc[baris_employee.index, 5] = shift3Baru.capitalize()
                     np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='%s')
                     print(f'\nData baru untuk "{df.iloc[baris_employee.index, 0:3].to_string(header=False,index=False)}" telah diubah!\n\nData saat ini :\n{df}\n')
+                # FITUR 2.2.2 SELESAI
+
                 else:
                     print("kesalahan input, silahkan coba lagi")
+        # FITUR 2.2 SELESAI
+
             else:
-                print("Kesalahan input atau data tidak ada...")
-            input("Press [enter] to back to Main Menu")    # back to main menu
-            main_page_admin()
-        else:
-            input("Press [enter] to back to Main Menu")    # back to main menu
+                print("PERHATIAN : Kesalahan input atau data tidak ada...")
+            input("Tekan [enter] untuk kembali ke menu utama")    # back to main menu
             main_page_admin()
 
-    elif menu_choice == '3':    # edit presensi karyawan
+        else:
+            input("Tekan [enter] untuk kembali ke menu utama")    # back to main menu
+            main_page_admin()
+    # FITUR 2 SELESAI
+
+    elif menu_choice == '3':        # FITUR 3 EDIT DATA PRESENSI
         os.system('cls')
         data_presensi = []
         with open('presensi_database.csv') as csvfile_presensi:       # membuka data admin dari csv ke list
@@ -492,26 +536,30 @@ def main_page_employee():
 
     elif menu_choice == '3':
 
-        os.system('cls')
+        # os.system('cls')
         # with open('presensi_database.csv', 'r') as presensi_file:
         #     data_presensi = presensi_file.readlines()
-    
+
         # total_kehadiran = len(data_presensi)
         # total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
 
         # persentase_kehadiran = (total_kehadiran / total_hari_kerja) * 100
-    
+
         # print('\n================ REKAPITULASI ABSENSI ================')
 
         # # Membuat DataFrame Pandas dari data presensi
-        # df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi], columns=["Tanggal","Shift"])
-    
-        # # Menampilkan DataFrame sebagai tabel
-        # print(df)
-    
-        # print(f"Total Kehadiran: {total_kehadiran}")
+        # df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
+        # columns=["Tanggal", "ID", "Nama", "Shift"])
+
+        # # Filter DataFrame berdasarkan ID yang sudah login
+        # filtered_df = df.loc[df['ID'] == launch_ID]
+
+        # # Menampilkan DataFrame yang sudah difilter sebagai tabel
+        # print(filtered_df)
+
+        # print(f"Total Kehadiran: {len(filtered_df)}")
         # print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
-    
+
         input("Press any key to continue")
         main_page_employee()
 
@@ -584,6 +632,10 @@ if not(Path('admin_account_database.csv').is_file()):
     with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
         admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
         admin_list.writeheader()
+
+kolom_admin = ['ID','Nama','Posisi','Bidang']
+kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3']
+kolom_presensi = ['Tanggal','ID', 'Nama','Shift','kehadiran']
 
 launchPage()
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
