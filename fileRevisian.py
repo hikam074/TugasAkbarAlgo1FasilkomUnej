@@ -66,6 +66,8 @@ def launchPage():
         else:
             launch_page_condition = True
 
+# LAUNCH PAGE SELESAI
+
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -264,39 +266,50 @@ def main_page_admin():
         df = pd.DataFrame(data_presensi, columns=kolom_presensi) 
         masukan_edit_presensi_id = input("admin>menu utama>edit presensi karyawan\n=============== MENU EDIT PRESENSI KARYAWAN ===============\n\nMasukkan ID karyawan yang hendak diubah : ")
         masukan_edit_presensi_tanggal = input("Masukkan tanggal yang dicari : ")
-        print()
         if masukan_edit_presensi_id in df['ID'].values:     
             filtered_df = df.loc[df['ID'].str.contains(masukan_edit_presensi_id)]
-            filtered_df = filtered_df.loc[df['Tanggal'].str.contains(masukan_edit_presensi_tanggal)]        
-            print(filtered_df)
-            masukan_edit_presensi_index = int(input("pilih index yang akan diedit: "))
-            print(f"\nData yang akan diedit : \n{df[masukan_edit_presensi_index:masukan_edit_presensi_index+1]}\nTekan [enter] untuk melewati perubahan\n")
-            masukanEditPresensiTanggalBaru = input("Masukkan tanggal baru : ")  
-            masukanEditPresensiIDBaru = input("Masukkan ID baru : ")
-            masukanEditPresensiNamaBaru = input("Masukkan Nama baru : ") 
-            masukanEditPresensiShiftBaru = input("Masukkan Shift baru : ") 
-            if masukanEditPresensiTanggalBaru == '':
-                pass
-            else:
-                df.iloc[masukan_edit_presensi_index, 0] = masukanEditPresensiTanggalBaru
-            if masukanEditPresensiIDBaru == '':
-                pass
-            else:
-                df.iloc[masukan_edit_presensi_index, 1] = masukanEditPresensiIDBaru
-            if masukanEditPresensiNamaBaru == '':
-                pass
-            else:
-                df.iloc[masukan_edit_presensi_index, 2] = masukanEditPresensiNamaBaru
-            if masukanEditPresensiShiftBaru == '':
-                pass
-            else:
-                df.iloc[masukan_edit_presensi_index, 3] = masukanEditPresensiShiftBaru
-            np.savetxt('presensi_database.csv',df,delimiter=',',fmt='%s')
-            print(f'\nData baru "{masukan_edit_presensi_id}" telah diubah!\n\nData saat ini :\n{df}\n')
+            filtered_df = filtered_df.loc[df['Tanggal'].str.contains(masukan_edit_presensi_tanggal)]
+            # del filtered_df['index']
+            if len(filtered_df) == 0 :
+                print("\nData yang anda cari tidak ditemukan...\n")
+            else :
+                print(f'\nHasil pencarian :\n\n{filtered_df}')
+                masukan_edit_presensi_index = int(input("\npilih index yang akan diedit: "))
+                if masukan_edit_presensi_index in range(0,len(df)):
+                    print(f"\nData yang akan diedit : \n{filtered_df[masukan_edit_presensi_index:masukan_edit_presensi_index+1].to_string(index=False)}\n\nTekan [enter] untuk melewati perubahan\n")
+                    masukanEditPresensiTanggalBaru = input("Masukkan tanggal baru : ")  
+                    masukanEditPresensiIDBaru = input("Masukkan ID baru : ")
+                    masukanEditPresensiNamaBaru = input("Masukkan Nama baru : ") 
+                    masukanEditPresensiShiftBaru = input("Masukkan Shift baru : ")
+                    masukanEditPresensiStatusBaru = input("Masukkan Status kehadiran baru : ")
+                    if masukanEditPresensiTanggalBaru == '':
+                        pass
+                    else:
+                        df.iloc[masukan_edit_presensi_index, 0] = masukanEditPresensiTanggalBaru.upper()
+                    if masukanEditPresensiIDBaru == '':
+                        pass
+                    else:
+                        df.iloc[masukan_edit_presensi_index, 1] = masukanEditPresensiIDBaru.upper()
+                    if masukanEditPresensiNamaBaru == '':
+                        pass
+                    else:
+                        df.iloc[masukan_edit_presensi_index, 2] = masukanEditPresensiNamaBaru.upper()
+                    if masukanEditPresensiShiftBaru == '':
+                        pass
+                    else:
+                        df.iloc[masukan_edit_presensi_index, 3] = masukanEditPresensiShiftBaru.upper()
+                    if masukanEditPresensiStatusBaru == '':
+                        pass
+                    else:
+                        df.iloc[masukan_edit_presensi_index, 4] = masukanEditPresensiStatusBaru.upper()
+                    np.savetxt('presensi_database.csv',df,delimiter=',',fmt='%s')
+                    print(f'\nData baru "{masukan_edit_presensi_id}" telah diubah!\n\nData saat ini :\n{df}\n')
+                else:
+                    print("Input anda tidak dalam range yang hendak diedit!\n")
         else:
             print(f"{masukan_edit_presensi_id} tidak ada dalam database.")
  
-        input("Press [enter] to back to Main Menu")  # back to main menu
+        input("Tekan [enter] untuk kembali ke menu utama")  # back to main menu
         main_page_admin()
 
     elif menu_choice == '4':
