@@ -371,6 +371,7 @@ def main_page_admin():
                 if masukan_edit_presensi_index in range(0,len(df)+1):
                     print(f"\nData yang akan diedit : \n{df[masukan_edit_presensi_index:masukan_edit_presensi_index+1].to_string(index=False)}\n\nTekan [enter] untuk melewati perubahan\n")
                     masukanEditPresensiTanggalBaru = input("Masukkan tanggal baru : ")  
+                    masukanEditPresensiWaktuBaru = input("Masukkan waktu baru : ")
                     masukanEditPresensiIDBaru = input("Masukkan ID baru : ")
                     masukanEditPresensiNamaBaru = input("Masukkan Nama baru : ") 
                     masukanEditPresensiShiftBaru = input("Masukkan Shift baru : ")
@@ -379,22 +380,26 @@ def main_page_admin():
                         pass
                     else:
                         df.iloc[masukan_edit_presensi_index, 0] = masukanEditPresensiTanggalBaru.upper()
+                    if masukanEditPresensiWaktuBaru == '':
+                        pass
+                    else:
+                        df.iloc[masukan_edit_presensi_index, 1] = masukanEditPresensiWaktuBaru.upper()
                     if masukanEditPresensiIDBaru == '':
                         pass
                     else:
-                        df.iloc[masukan_edit_presensi_index, 1] = masukanEditPresensiIDBaru.upper()
+                        df.iloc[masukan_edit_presensi_index, 2] = masukanEditPresensiIDBaru.upper()
                     if masukanEditPresensiNamaBaru == '':
                         pass
                     else:
-                        df.iloc[masukan_edit_presensi_index, 2] = masukanEditPresensiNamaBaru.upper()
+                        df.iloc[masukan_edit_presensi_index, 3] = masukanEditPresensiNamaBaru.upper()
                     if masukanEditPresensiShiftBaru == '':
                         pass
                     else:
-                        df.iloc[masukan_edit_presensi_index, 3] = masukanEditPresensiShiftBaru.upper()
+                        df.iloc[masukan_edit_presensi_index, 4] = masukanEditPresensiShiftBaru.upper()
                     if masukanEditPresensiStatusBaru == '':
                         pass
                     else:
-                        df.iloc[masukan_edit_presensi_index, 4] = masukanEditPresensiStatusBaru.upper()
+                        df.iloc[masukan_edit_presensi_index, 5] = masukanEditPresensiStatusBaru.upper()
                     np.savetxt('presensi_database.csv',df,delimiter=',',fmt='%s')
                     print(f'\nData baru "{masukan_edit_presensi_id}" telah diubah!\n\nData saat ini :\n{df}\n')
                 else:
@@ -417,7 +422,7 @@ def main_page_admin():
                 for row in reader_Admin:
                     data_admin.append(row)
             df = pd.DataFrame(data_admin, columns=kolom_admin)              # memasukkan data list ke pandas
-            print(df)                                                       # menampilkan data
+            print(tabulate.tabulate(df,headers=kolom_admin,tablefmt='grid'))                                                       # menampilkan data
             input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()
         # FITUR 4.1 SELESAI
@@ -437,7 +442,7 @@ def main_page_admin():
             df['Shift 1'] = df["Shift 1"].str.replace('False','-')
             df['Shift 2'] = df["Shift 2"].str.replace('False','-')
             df['Shift 3'] = df["Shift 3"].str.replace('False','-')
-            print(df)                                                       # menampilkan data
+            print(tabulate.tabulate(df,headers=kolom_employee,tablefmt='grid'))                                                       # menampilkan data
             input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()
         # FITUR 4.2 SELESAI
@@ -452,7 +457,7 @@ def main_page_admin():
                     data_presensi.append(row)
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)        # memasukkan data list ke pandas
             df = df.sort_values(by='Tanggal',ascending=True)
-            print(df.to_string(index=False))                                # menampilkan data
+            print((df.to_string(index=False)))                                # menampilkan data
             input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()
         # FITUR 4.3 
@@ -784,7 +789,7 @@ def akun_pertama():
 
 kolom_admin = ['ID','Nama','Posisi','Bidang','Password']
 kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3','Password']
-kolom_presensi = ['Tanggal','ID', 'Nama','Shift','kehadiran']
+kolom_presensi = ['Tanggal','Waktu','ID', 'Nama','Shift','kehadiran']
 
 
 now_time = datetime.datetime.now()
