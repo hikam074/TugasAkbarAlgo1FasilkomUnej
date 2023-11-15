@@ -3,7 +3,11 @@ import os                   # agar bisa clean terminal
 import pandas as pd         # import pandas
 import numpy as np          # import numpy
 from pathlib import Path    # import modul path
-
+import datetime             # import time and date
+import tabulate             # import nice table
+# from time import sleep      # membuat ticks sehingga tidak run sangat cepat
+# from sys import stdout      # membuat jam realtime
+# import multiprocessing      # import multiprocessing agar waktu realtime dan program keseluruhan bisa bekerja bersamaan
 
 # HALAMAN LOGIN DAN LAUNCH PAGE ------------------------------------------------------------------------------------------------------------------------------
 def launchPage():
@@ -18,6 +22,8 @@ def launchPage():
             print("=============== WELCOME TO LOGIN PAGE ===============")
             global launch_ID
             launch_ID = input("Masukkan ID anda : ")
+            global launchPass
+            launchPass = input("Masukkan Passcode anda : ")
             with open('admin_account_database.csv','r') as fileAdmincsv:
                 admin_list = fileAdmincsv.read()
             with open('employee_account_database.csv', 'r') as fileEmployeecsv:
@@ -32,12 +38,11 @@ def launchPage():
                     admin_column = [x[0] for x in data_admin]
                     if launch_ID in admin_column:
                         for x in range(0,len(data_admin)):
-                            if launch_ID == data_admin[x][0]:
+                            if launch_ID == data_admin[x][0] and launchPass == data_admin[x][4]:
                                 launch_page_condition = False
                                 main_page_admin()
-                            else:
-                                launch_page_condition = True
                     else:
+                        input("\nPERHATIAN : ID atau Passcode salah, silahkan tekan [enter] untuk coba lagi")
                         launch_page_condition : True
 
                 elif launch_ID in employee_list:
@@ -49,15 +54,14 @@ def launchPage():
                     employee_column = [x[0] for x in data_employee]
                     if launch_ID in employee_column:
                         for x in range(0,len(data_employee)):
-                            if launch_ID == data_employee[x][0]:
+                            if launch_ID == data_employee[x][0] and launchPass == data_employee[x][6]:
                                 launch_page_condition = False
                                 main_page_employee()
-                            else:
-                                launch_page_condition = True
                     else:
+                        input("\nPERHATIAN : ID atau Passcode salah, silahkan tekan [enter] untuk coba lagi")
                         launch_page_condition = True
-
                 else:
+                    input("\nPERHATIAN : ID atau Passcode salah, silahkan tekan [enter] untuk coba lagi")
                     launch_page_condition = True
 
         elif launch_menu in 'Qq':
@@ -75,7 +79,7 @@ def launchPage():
 
 def main_page_admin():
     os.system('cls')
-    print('admin>menu utama\n=============== ADMIN MENU ===============')    # mengucapkan selamat datang
+    print(f'admin>menu utama\n=============== ADMIN MENU ===============\nWaktu : {waktuReal}\n')    # mengucapkan selamat datang
 
     data_employee = []
     with open('employee_account_database.csv') as csvfile_employee:
@@ -108,14 +112,15 @@ def main_page_admin():
                 masukkanAdminNama = input("Masukkan nama admin : ")
                 masukkanAdminPosisi = input("Masukkan posisi admin : ")
                 masukkanAdminBidang = input("Masukkan bidang admin : ")
-                masukan_tambah_admin = [masukkanAdminID.upper(),masukkanAdminNama.upper(),masukkanAdminPosisi.upper(),masukkanAdminBidang.upper()]
+                masukkanAdminPass = input("Masukkan passcode admin (case sensitive) : ")
+                masukan_tambah_admin = [masukkanAdminID.upper(),masukkanAdminNama.upper(),masukkanAdminPosisi.upper(),masukkanAdminBidang.upper(),masukkanAdminPass]
                 # Menambahkan data baru ke dalam list data admin
                 data_admin.append(masukan_tambah_admin)
                 # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                 with open('admin_account_database.csv', 'w', newline='') as csvfile_admin:
                     writer_admin = csv.writer(csvfile_admin)
                     writer_admin.writerows(data_admin)
-                input(f'\nData baru : {masukkanAdminID.upper()},{masukkanAdminNama.upper()},{masukkanAdminPosisi.upper()},{masukkanAdminBidang.upper()}\nPERHATIAN : Data admin berhasil ditambahkan!\n\nTekan [enter] untuk kembali ke menu utama')
+                input(f'\nData baru : {masukkanAdminID.upper()},{masukkanAdminNama.upper()},{masukkanAdminPosisi.upper()},{masukkanAdminBidang.upper()},{masukkanAdminPass}\nPERHATIAN : Data admin berhasil ditambahkan!\n\nTekan [enter] untuk kembali ke menu utama')
             else:
                 input(f'\nPERHATIAN : Data admin "{masukkanAdminID}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             main_page_admin()
@@ -124,21 +129,99 @@ def main_page_admin():
         elif menu_choice_1 == '2':  # FITUR 1.2 TAMBAHKAN ORANG>TAMBAHKAN KARYAWAN
             os.system('cls')
             print("admin>menu utama>tambahkan orang>tambahkan karyawam\n=============== MENU TAMBAHKAN KARYAWAN ===============\n")
+            shiftPagiKasir  = [i for i in range(len(data_employee)) if ((data_employee[i][3] == 'True') and (data_employee[i][2] == 'KASIR'))]
+            shiftSiangKasir = [i for i in range(len(data_employee)) if ((data_employee[i][4] == 'True') and (data_employee[i][2] == 'KASIR'))]
+            shiftMalamKasir = [i for i in range(len(data_employee)) if ((data_employee[i][5] == 'True') and (data_employee[i][2] == 'KASIR'))]
+
+            shiftPagiStaf  = [i for i in range(len(data_employee)) if (data_employee[i][3] == 'True' and (data_employee[i][2] == 'STAF TOKO'))]
+            shiftSiangStaf = [i for i in range(len(data_employee)) if (data_employee[i][4] == 'True' and (data_employee[i][2] == 'STAF TOKO'))]
+            shiftMalamStaf = [i for i in range(len(data_employee)) if (data_employee[i][5] == 'True' and (data_employee[i][2] == 'STAF TOKO'))]
+
+            shiftKasir = [i for i in range(len(data_employee)) if data_employee[i][2] == 'KASIR']
+            shiftStaf = [i for i in range(len(data_employee)) if data_employee[i][2] == 'STAF TOKO']
+
             masukkanKaryawanID = input("Masukkan ID karyawan : ")
             if masukkanKaryawanID not in employee_column :
                 masukkanKaryawanNama = input("Masukkan nama karyawan : ")
-                masukkanKaryawanPosisi = input("Masukkan posisi karyawan : ")
-                masukkanKaryawanShift1 = input("Masukkan apakah karyawan bertugas Shift 1 (True/False) : ")
-                masukkanKaryawanShift2 = input("Masukkan apakah karyawan bertugas Shift 2 (True/False) : ")
-                masukkanKaryawanShift3 = input("Masukkan apakah karyawan bertugas Shift 3 (True/False) : ")
-                masukan_tambah_karyawan = [masukkanKaryawanID.upper(),masukkanKaryawanNama.upper(),masukkanKaryawanPosisi.upper(),masukkanKaryawanShift1.capitalize(),masukkanKaryawanShift2.capitalize(),masukkanKaryawanShift3.capitalize()]
+                ulangAdmin1_2Posisi = True
+                while ulangAdmin1_2Posisi:
+                    masukkanKaryawanPosisiNo = input("[1] Kasir [2] Staf Toko\nMasukkan posisi karyawan : ")
+                    if masukkanKaryawanPosisiNo == '1':
+                        if len(shiftKasir)<3:
+                            ulangAdmin1_2Posisi = False
+                            masukkanKaryawanPosisi = 'KASIR'
+                            masukkanKaryawanShift1 = input("\nMasukkan apakah karyawan bertugas Shift 1 (True/False) : ")
+                            if (masukkanKaryawanShift1.capitalize() == 'True' and len(shiftPagiKasir)<1):
+                                    masukkanKaryawanShift1 = 'True'
+                                    masukkanKaryawanShift2 = 'False'
+                                    masukkanKaryawanShift3 = 'False'
+                            elif ((masukkanKaryawanShift1.capitalize() == 'True' and len(shiftPagiKasir)>=1)) or (masukkanKaryawanShift1.capitalize() == 'False'): 
+                                input("Shift Pagi sudah penuh atau anda tidak memilih shift Pagi! plih shift yang lain...")
+                                masukkanKaryawanShift2 = input("Masukkan apakah karyawan bertugas Shift 2 (True/False) : ")
+                                if masukkanKaryawanShift2.capitalize() == 'True' and len(shiftSiangKasir)<1:
+                                    masukkanKaryawanShift1 = 'False'
+                                    masukkanKaryawanShift2 = 'True'
+                                    masukkanKaryawanShift3 = 'False'
+                                elif (masukkanKaryawanShift2.capitalize() == 'True' and len(shiftSiangKasir)>=1) or (masukkanKaryawanShift2.capitalize() == 'False'):
+                                    input("Shift Pagi dan Siang sudah penuh atau anda tidak memilih shift siang! mengarahkan ke Shift Malam...")
+                                    if len(shiftMalamKasir)<1:
+                                        input("Kasir diarahkan ke shift malam!")
+                                        masukkanKaryawanShift1 = 'False'
+                                        masukkanKaryawanShift2 = 'False'
+                                        masukkanKaryawanShift3 = 'True'
+                                    elif len(shiftMalamKasir)>=1:
+                                        print("Semua shift penuh! tidak dapat menambahkan data...")
+                                        input('Tekan [enter] untuk kembali ke menu utama')
+                                        main_page_admin()
+                        else:
+                            print("\nPosisi untuk Kasir sudah penuh!Tidak bisa menambahkan data...")
+                            input('Tekan [enter] untuk kembali ke menu utama')
+                            main_page_admin()
+                    elif masukkanKaryawanPosisiNo == '2':
+                        if len(shiftStaf)<6:
+                            ulangAdmin1_2Posisi = False
+                            masukkanKaryawanPosisi = 'STAF TOKO'
+                            masukkanKaryawanShift1 = input("\nMasukkan apakah karyawan bertugas Shift 1 (True/False) : ")
+                            if (masukkanKaryawanShift1.capitalize() == 'True' and len(shiftPagiStaf)<2):
+                                    masukkanKaryawanShift1 = 'True'
+                                    masukkanKaryawanShift2 = 'False'
+                                    masukkanKaryawanShift3 = 'False'
+                            elif ((masukkanKaryawanShift1.capitalize() == 'True' and len(shiftPagiStaf)>=2)) or (masukkanKaryawanShift1.capitalize() == 'False'): 
+                                input("Shift Pagi sudah penuh atau anda tidak memilih shift Pagi! plih shift yang lain...")
+                                masukkanKaryawanShift2 = input("Masukkan apakah karyawan bertugas Shift 2 (True/False) : ")
+                                if masukkanKaryawanShift2.capitalize() == 'True' and len(shiftSiangStaf)<2:
+                                    masukkanKaryawanShift1 = 'False'
+                                    masukkanKaryawanShift2 = 'True'
+                                    masukkanKaryawanShift3 = 'False'
+                                elif (masukkanKaryawanShift2.capitalize() == 'True' and len(shiftSiangStaf)>=2) or (masukkanKaryawanShift2.capitalize() == 'False'):
+                                    input("Shift Pagi dan Siang sudah penuh atau anda tidak memilih shift Shiang! mengarahkan ke Shift Malam...")
+                                    if len(shiftMalamStaf)<2:
+                                        input("Staf toko diarahkan ke shift malam!")
+                                        masukkanKaryawanShift1 = 'False'
+                                        masukkanKaryawanShift2 = 'False'
+                                        masukkanKaryawanShift3 = 'True'
+                                    elif len(shiftMalamStaf)>=2:
+                                        print("Semua shift penuh! tidak dapat menambahkan data...")
+                                        input('Tekan [enter] untuk kembali ke menu utama')
+                                        main_page_admin()
+                        else:
+                            print("\nPosisi untuk Staf Toko sudah penuh!Tidak bisa menambahkan data...")
+                            input('Tekan [enter] untuk kembali ke menu utama')
+                            main_page_admin()
+                    else:
+                        input("\nMasukan tidak valid, coba lagi...")
+                        ulangAdmin1_2Posisi = True
+
+                masukkanKaryawanPass = input("Masukkan passcode karyawan (case sensitive) : ")
+                masukan_tambah_karyawan = [masukkanKaryawanID.upper(),masukkanKaryawanNama.upper(),masukkanKaryawanPosisi.upper(),masukkanKaryawanShift1.capitalize(),masukkanKaryawanShift2.capitalize(),masukkanKaryawanShift3.capitalize(),masukkanKaryawanPass]
                 # Menambahkan data baru ke dalam list data karyawan
                 data_employee.append(masukan_tambah_karyawan)
                 # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+
                 with open('employee_account_database.csv', 'w', newline='') as csvfile_employee:
                     writer_employee = csv.writer(csvfile_employee)
                     writer_employee.writerows(data_employee)
-                input(f'\nData baru : {masukkanKaryawanID.upper()},{masukkanKaryawanNama.upper()},{masukkanKaryawanPosisi.upper()},{masukkanKaryawanShift1.capitalize()},{masukkanKaryawanShift2.capitalize()},{masukkanKaryawanShift3.capitalize()}\nPERHATIAN : Data karyawan berhasil ditambahkan!\n\nTekan [enter] untuk kembali ke menu utama')
+                input(f'\nData baru : {masukkanKaryawanID.upper()},{masukkanKaryawanNama.upper()},{masukkanKaryawanPosisi.upper()},{masukkanKaryawanShift1.capitalize()},{masukkanKaryawanShift2.capitalize()},{masukkanKaryawanShift3.capitalize()},{masukkanKaryawanPass}\nPERHATIAN : Data karyawan berhasil ditambahkan!\n\nTekan [enter] untuk kembali ke menu utama')
             else:
                 input(f'\nPERHATIAN : Data karyawan "{masukkanKaryawanID}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             main_page_admin()
@@ -166,6 +249,7 @@ def main_page_admin():
                 namaBaru   = input("Masukkan nama baru: ")
                 posisiBaru = input("Masukkan posisi baru: ")
                 bidangBaru = input("Masukkan bidang baru: ")
+                passBaru   = input("Masukkan passcode baru: ")
                 if IDBaru == '':
                     pass
                 else:
@@ -182,6 +266,10 @@ def main_page_admin():
                     pass
                 else:
                     df.iloc[baris_admin.index, 3] = bidangBaru.upper()
+                if passBaru == '':
+                    pass
+                else:
+                    df.iloc[baris_admin.index, 4] = passBaru
                 np.savetxt('admin_account_database.csv',df,delimiter=',',fmt='%s')
                 print(f'\nData baru "{masukan_edit_admin}" telah diubah!\n\nData saat ini :\n{df}\n')
             else:
@@ -206,6 +294,7 @@ def main_page_admin():
                     IDBaru = input("Masukkan ID baru: ")
                     namaBaru = input("Masukkan nama baru: ")
                     posisiBaru = input("Masukkan posisi baru: ")
+                    passBaru = input("Masukkan passcode baru: ")
                     if IDBaru == '':
                         pass
                     else:
@@ -218,6 +307,10 @@ def main_page_admin():
                         pass
                     else:
                         df.iloc[baris_employee.index, 2] = posisiBaru.upper()
+                    if passBaru == '':
+                        pass
+                    else:
+                        df.iloc[baris_employee.index, 6] = passBaru
                     np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='%s')
                     print(f'\nData baru untuk "{df.iloc[baris_employee.index, 0:3].to_string(header=False,index=False)}" telah diubah!\n\nData saat ini :\n{df}\n')
                 # FITUR 2.2.1 SELESAI
@@ -275,8 +368,8 @@ def main_page_admin():
             else :
                 print(f'\nHasil pencarian :\n\n{filtered_df}')
                 masukan_edit_presensi_index = int(input("\npilih index yang akan diedit: "))
-                if masukan_edit_presensi_index in range(0,len(df)):
-                    print(f"\nData yang akan diedit : \n{filtered_df[masukan_edit_presensi_index:masukan_edit_presensi_index+1].to_string(index=False)}\n\nTekan [enter] untuk melewati perubahan\n")
+                if masukan_edit_presensi_index in range(0,len(df)+1):
+                    print(f"\nData yang akan diedit : \n{df[masukan_edit_presensi_index:masukan_edit_presensi_index+1].to_string(index=False)}\n\nTekan [enter] untuk melewati perubahan\n")
                     masukanEditPresensiTanggalBaru = input("Masukkan tanggal baru : ")  
                     masukanEditPresensiIDBaru = input("Masukkan ID baru : ")
                     masukanEditPresensiNamaBaru = input("Masukkan Nama baru : ") 
@@ -311,10 +404,11 @@ def main_page_admin():
  
         input("Tekan [enter] untuk kembali ke menu utama")  # back to main menu
         main_page_admin()
+    # FITUR 3 SELESAI
 
-    elif menu_choice == '4':
-        menu_choice_4 = input("[1]Lihat Data Admin\n[2]Lihat Data Karyawan\n[3]Lihat Presensi Karyawan\nPilih menu : ")
-        if menu_choice_4 == '1':    # lihat data admin
+    elif menu_choice == '4':        # FITUR 4 LIHAT DATA
+        menu_choice_4 = input("[1] Lihat Data Admin\n[2] Lihat Data Karyawan\n[3] Lihat Presensi Karyawan\nPilih menu : ")
+        if menu_choice_4 == '1':    # FITUR 4.1 LIHAT DATA>LIHAT DATA ADMIN
             os.system('cls')
             print("admin>menu utama>lihat data>lihat data admin\n=============== MENU LIHAT DATA ADMIN ===============\n")
             data_admin = []
@@ -324,38 +418,52 @@ def main_page_admin():
                     data_admin.append(row)
             df = pd.DataFrame(data_admin, columns=kolom_admin)              # memasukkan data list ke pandas
             print(df)                                                       # menampilkan data
-            input("Press [enter] to back to Main Menu")  # back to main menu
+            input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()
-        elif menu_choice_4 == '2':    # lihat data karyawan
+        # FITUR 4.1 SELESAI
+
+        elif menu_choice_4 == '2':    # FITUR 4.2 LIHAT DATA>LIHAT DATA KARYAWAN
             os.system('cls')
-            print("admin>menu utama>lihat data>lihat data karyawan\n=============== MENU LIHAT DATA KARYAWAN ===============\n")
+            print("admin>menu utama>lihat data>lihat data karyawan\n=============== MENU LIHAT DATA KARYAWAN ===============\n\njadwal minggu ini\n")
             data_employee = []
             with open('employee_account_database.csv') as csvfile_employee: # membuka data karyawan dari csv ke list
                 reader_employee = csv.reader(csvfile_employee)
                 for row in reader_employee:
                     data_employee.append(row)
             df = pd.DataFrame(data_employee, columns=kolom_employee)        # memasukkan data list ke pandas
+            df['Shift 1'] = df["Shift 1"].str.replace('True','PAGI')
+            df['Shift 2'] = df["Shift 2"].str.replace('True','SIANG')
+            df['Shift 3'] = df["Shift 3"].str.replace('True','MALAM')
+            df['Shift 1'] = df["Shift 1"].str.replace('False','-')
+            df['Shift 2'] = df["Shift 2"].str.replace('False','-')
+            df['Shift 3'] = df["Shift 3"].str.replace('False','-')
             print(df)                                                       # menampilkan data
-            input("Press [enter] to back to Main Menu")  # back to main menu
+            input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()
-        elif menu_choice_4 == '3':    # lihat presensi karyawan
+        # FITUR 4.2 SELESAI
+
+        elif menu_choice_4 == '3':    # FITUR 4.3 LIHAT DATA>LIHAT PRESENSI KARYAWAN
             os.system('cls')
-            print("admin>menu utama>lihat data>lihat presensi karyawan\n=============== MENU LIHAT PRESENSI KARYAWAN ===============\n")
+            print("admin>menu utama>lihat data>lihat presensi karyawan\n=============== MENU LIHAT PRESENSI KARYAWAN ===============\n\nrekapitulasi minggu ini\n")
             data_presensi = []
             with open('presensi_database.csv') as csvfile_presensi:         # membuka data presensi karyawan dari csv ke list
                 reader_presensi = csv.reader(csvfile_presensi)
                 for row in reader_presensi:
                     data_presensi.append(row)
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)        # memasukkan data list ke pandas
-            print(df)                                                       # menampilkan data
-            input("Press [enter] to back to Main Menu")  # back to main menu
+            df = df.sort_values(by='Tanggal',ascending=True)
+            print(df.to_string(index=False))                                # menampilkan data
+            input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()
+        # FITUR 4.3 
+
         else:
             main_page_admin()
+    # FITUR 4
 
-    elif menu_choice == '5':
+    elif menu_choice == '5':        # FITUR 5 HAPUS DATA
         menu_choice_5 = input("[1] Hapus Data Admin\n[2] Hapus Data Karyawan\n[3] Hapus Presensi Karyawan\nPilih menu : ")
-        if menu_choice_5 == '1':    # hapus data admin
+        if menu_choice_5 == '1':    # FITUR 5.1 HAPUS DATA>HAPUS DATA ADMIN
             os.system('cls')
             print("admin>menu utama>hapus data>\n=============== MENU HAPUS DATA ADMIN ===============\nmenampilkan keseluruhan data...\n")
             data_admin = []
@@ -385,8 +493,9 @@ def main_page_admin():
             else:
                 input("\nData tidak ada ... Press [enter] to back to Main Menu")
                 main_page_admin()
+        # FITUR 5.1
 
-        elif menu_choice_5 == '2':    # hapus data karyawan
+        elif menu_choice_5 == '2':    # FITUR 5.2 HAPUS DATA>HAPUS DATA KARYAWAN
 
             os.system('cls')
             print("admin>menu utama>hapus data>\n=============== MENU HAPUS DATA KARYAWAN ===============\nmenampilkan keseluruhan data...\n")
@@ -418,8 +527,9 @@ def main_page_admin():
             else:
                 input("\nData tidak ada ... Press [enter] to back to Main Menu")
                 main_page_admin()  
+        # FITUR 5.2
 
-        elif menu_choice_5 == '3':    # hapus presensi karyawan
+        elif menu_choice_5 == '3':    # FITUR 5.3 HAPUS PRESENSI KARYAWAN
             os.system('cls')
             print("admin>menu utama>hapus presensi karyawan>\n=============== MENU HAPUS PRESENSI KARYAWAN ===============\nmenampilkan keseluruhan data...\n")
             data_presensi = []
@@ -442,12 +552,16 @@ def main_page_admin():
             else:
                 input("Kesalahan input atau data tidak ada")
             input("Tekan [enter] untuk kembali ke Main Menu")
+        # FITUR 5.3
+
         else:
             main_page_admin()
+    # FITUR 5
 
     elif menu_choice == '6':    # kembali ke login page
         launch_page_condition = True
         return
+    # FITUR 6 SELESAI
 
     else:
         main_page_admin()    # salah input, kembali ke menu utama admin
@@ -460,7 +574,7 @@ def main_page_admin():
 
 def main_page_employee():   # FITUR KARYAWAN
     os.system('cls')
-    print('karyawan>menu utama\n=============== EMPLOYEE MENU ===============')    # mengucapkan selamat datang
+    print(f'karyawan>menu utama\n=============== EMPLOYEE MENU ===============\n')    # mengucapkan selamat datang
     data_employee = []
     with open('employee_account_database.csv') as csvfile_employee:
         reader_employee = csv.reader(csvfile_employee)
@@ -531,7 +645,7 @@ def main_page_employee():   # FITUR KARYAWAN
                 repeat_menu_choice_1 = True
 
             main_page_employee()
-    # FITUR 1 SELESAI
+    # FITUR 1 
 
     elif menu_choice == '2':  # FITUR 2 LIHAT JADWAL SHIFT ANDA
         os.system('cls')  # Membersihkan layar konsol
@@ -548,7 +662,7 @@ def main_page_employee():   # FITUR KARYAWAN
         print(filtered_df.to_string(index=False))
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
-    # FITUR 2 SELESAI
+    # FITUR 2 
 
     elif menu_choice == '3':  # FITUR 3 REKAPITULASI PRESENSI
         os.system('cls')
@@ -568,7 +682,7 @@ def main_page_employee():   # FITUR KARYAWAN
         print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
-    # FITUR 3 SELESAI
+    # FITUR 3 
 
     elif menu_choice == '4':  # FITUR 4 LIHAT DATA PRESENSI ANDA
 
@@ -586,7 +700,7 @@ def main_page_employee():   # FITUR KARYAWAN
         print(filtered_df)
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
-    # FITUR 4 SELESAI
+    # FITUR 4 
 
     elif menu_choice == '5':  # FITUR 5 EULA
         os.system('cls')
@@ -618,18 +732,18 @@ def main_page_employee():   # FITUR KARYAWAN
         print(eula_text)
         input("\n        Tekan [enter] untuk kembali ke menu utama")
         main_page_employee()
-    # FITUR 5 SELESAI
+    # FITUR 5 
 
     elif menu_choice == '6':  # FITUR 6 KELUAR
         launch_page_condition = True
         launchPage()
-    # FITUR 6 SELESAI
+    # FITUR 6 
 
     else:       # BILA SALAH INPUT
         main_page_employee()
     os.system('cls')
 
-# FITUR KARYAWAN SELESAI
+# FITUR KARYAWAN 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -659,17 +773,22 @@ def akun_pertama():
         first_account_nama   = str(input("Masukkan Nama anda : "))
         first_account_posisi = str(input("Masukkan Posisi anda : "))
         first_account_bidang = str(input("Masukkan bidang divisi anda : "))
+        first_Account_pass   = str(input("Masukkan passkey anda : "))
 
-        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},{first_account_bidang.upper()}"
+        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},{first_account_bidang.upper()},{first_Account_pass}"
 
         with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
             admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
             admin_list.writeheader()
 # FITUR AKUN PERTAMA SELESAI
 
-kolom_admin = ['ID','Nama','Posisi','Bidang']
-kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3']
+kolom_admin = ['ID','Nama','Posisi','Bidang','Password']
+kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3','Password']
 kolom_presensi = ['Tanggal','ID', 'Nama','Shift','kehadiran']
+
+
+now_time = datetime.datetime.now()
+waktuReal = now_time.strftime("\r%A, %d %B %Y | %H:%M:%S")
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
