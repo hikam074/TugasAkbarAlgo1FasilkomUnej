@@ -5,9 +5,7 @@ import numpy as np          # import numpy
 from pathlib import Path    # import modul path
 import datetime             # import time and date
 import tabulate             # import nice table
-# from time import sleep      # membuat ticks sehingga tidak run sangat cepat
-# from sys import stdout      # membuat jam realtime
-# import multiprocessing      # import multiprocessing agar waktu realtime dan program keseluruhan bisa bekerja bersamaan
+from datetimerange import DateTimeRange # import range waktu
 
 # HALAMAN LOGIN DAN LAUNCH PAGE ------------------------------------------------------------------------------------------------------------------------------
 def launchPage():
@@ -79,7 +77,7 @@ def launchPage():
 
 def main_page_admin():
     os.system('cls')
-    print(f'admin>menu utama\n=============== ADMIN MENU ===============\nWaktu : {waktuReal}\n')    # mengucapkan selamat datang
+    print(f'admin>menu utama\n=============== ADMIN MENU ===============\nWaktu : {now_time.strftime("\r%A, %d %B %Y | %H:%M:%S")}\n')    # mengucapkan selamat datang
 
     data_employee = []
     with open('employee_account_database.csv') as csvfile_employee:
@@ -498,7 +496,7 @@ def main_page_admin():
             else:
                 input("\nData tidak ada ... Press [enter] to back to Main Menu")
                 main_page_admin()
-        # FITUR 5.1
+        # FITUR 5.1 SELESAI
 
         elif menu_choice_5 == '2':    # FITUR 5.2 HAPUS DATA>HAPUS DATA KARYAWAN
 
@@ -532,7 +530,7 @@ def main_page_admin():
             else:
                 input("\nData tidak ada ... Press [enter] to back to Main Menu")
                 main_page_admin()  
-        # FITUR 5.2
+        # FITUR 5.2 SELESAI
 
         elif menu_choice_5 == '3':    # FITUR 5.3 HAPUS PRESENSI KARYAWAN
             os.system('cls')
@@ -579,7 +577,7 @@ def main_page_admin():
 
 def main_page_employee():   # FITUR KARYAWAN
     os.system('cls')
-    print(f'karyawan>menu utama\n=============== EMPLOYEE MENU ===============\n')    # mengucapkan selamat datang
+    print(f'karyawan>menu utama\n=============== EMPLOYEE MENU ===============\nwaktu : {now_time.strftime("\r%A, %d %B %Y | %H:%M:%S")}\n')    # mengucapkan selamat datang
     data_employee = []
     with open('employee_account_database.csv') as csvfile_employee:
         reader_employee = csv.reader(csvfile_employee)
@@ -600,14 +598,14 @@ def main_page_employee():   # FITUR KARYAWAN
     menu_choice = input("Pilih menu : ")
 
     if menu_choice == '1':    # FITUR 1 PRESENSI SEKARANG
-        tanggal_presensi = input("\nMasukkan Tanggal Hari Ini [yyyy-mm-dd] : ")
+        tanggal_presensi = now_time.strftime("%Y-%B-%d")
         repeat_menu_choice_1 = True
         while repeat_menu_choice_1 :
             
             menu_choice_1 = input("\nPilih Shift:\n[1] Pagi\n[2] Siang\n[3] Malam\n[4] Kembali Ke Menu\nPilih menu : ")
             if menu_choice_1 == '1':            # FITUR 1.1 PRESENSI SEKARANG>SHIFT PAGI
                 repeat_menu_choice_1 = False
-                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'PAGI','HADIR']
+                data_baru = [tanggal_presensi,now_time.strftime("%H:%M:%S"), data_employee[tujuan][0],data_employee[tujuan][1],'PAGI','HADIR']
                 if data_baru not in data_presensi:
                     # Menambahkan data baru ke dalam list data_presensi
                     data_presensi.append(data_baru)
@@ -615,12 +613,12 @@ def main_page_employee():   # FITUR KARYAWAN
                     with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
                         writer_presensi = csv.writer(csvfile_presensi)
                         writer_presensi.writerows(data_presensi)
-                    input(f'\nPresensi : {tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,HADIR\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
+                    input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,HADIR\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
                 else:
                     input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,HADIR" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             elif menu_choice_1 == '2':          # FITUR 1.2 PRESENSI SEKARANG>SHIFT SIANG
                 repeat_menu_choice_1 = False
-                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1], 'SIANG','HADIR']
+                data_baru = [tanggal_presensi,now_time.strftime("%H:%M:%S"), data_employee[tujuan][0],data_employee[tujuan][1], 'SIANG','HADIR']
                 if data_baru not in data_presensi:
                     # Menambahkan data baru ke dalam list data_presensi
                     data_presensi.append(data_baru)
@@ -628,12 +626,12 @@ def main_page_employee():   # FITUR KARYAWAN
                     with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
                         writer_presensi = csv.writer(csvfile_presensi)
                         writer_presensi.writerows(data_presensi)
-                    input(f'\nPresensi : {tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,HADIR"\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
+                    input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,HADIR"\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
                 else:
-                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,HADIR" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
+                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,HADIR" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             elif menu_choice_1 == '3':          # FITUR 1.3 PRESENSI SEKARANG>SHIFT MALAM
                 repeat_menu_choice_1 = False
-                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1], 'MALAM','HADIR']
+                data_baru = [tanggal_presensi,now_time.strftime("%H:%M:%S"), data_employee[tujuan][0],data_employee[tujuan][1], 'MALAM','HADIR']
                 if data_baru not in data_presensi:
                     # Menambahkan data baru ke dalam list data_presensi
                     data_presensi.append(data_baru)
@@ -641,9 +639,9 @@ def main_page_employee():   # FITUR KARYAWAN
                     with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
                         writer_presensi = csv.writer(csvfile_presensi)
                         writer_presensi.writerows(data_presensi)
-                    input(f'\nPresensi : {tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,HADIR"\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
+                    input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,HADIR"\nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')
                 else:
-                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,HADIR" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
+                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,HADIR" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
             elif menu_choice_1 == '4':          # FITUR 1.4 PRESENSI SEKARANG>KEMBALI KE MENU UTAMA
                 repeat_menu_choice_1 = False
             else:                               # SALAH INPUT, COBA LAGI
@@ -794,6 +792,8 @@ kolom_presensi = ['Tanggal','Waktu','ID', 'Nama','Shift','kehadiran']
 
 now_time = datetime.datetime.now()
 waktuReal = now_time.strftime("\r%A, %d %B %Y | %H:%M:%S")
+waktuRealTanggal = now_time.strftime("%Y-%m-%d")
+waktuRealJam = now_time.strftime("%H:%M:%S")
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
