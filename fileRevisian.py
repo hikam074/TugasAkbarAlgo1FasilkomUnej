@@ -701,25 +701,36 @@ def main_page_employee():   # FITUR KARYAWAN
                 repeat_menu_choice_1 = True
 
             main_page_employee()
-
     # FITUR 1 SELESAI
 
     elif menu_choice == '2':  # FITUR 2 LIHAT JADWAL SHIFT ANDA
         os.system('cls')  # Membersihkan layar konsol
         print("karyawan>menu utama>lihat jadwal shift\n=============== MENU LIHAT JADWAL SHIFT ANDA ===============\n")
-        with open('employee_account_database.csv', 'r') as presensi_file:
-            data_presensi = presensi_file.readlines()
-        total_kehadiran = len(data_presensi)
-        total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
-        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
-        columns=['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3'])
+        print("Shift anda minggu ini:\n")
+        df = pd.DataFrame(data_employee,columns=kolom_employee)
         # Filter DataFrame berdasarkan ID yang sudah login
         filtered_df = df.loc[df['ID'] == launch_ID]
-        # Menampilkan DataFrame yang sudah difilter sebagai tabel
-        print(filtered_df.to_string(index=False))
+        if filtered_df.loc[0, 'Shift 1'] == 'True':
+            print('"PAGI"')
+            if filtered_df.loc[0, 'Shift 2'] == 'True':
+                print('"SIANG"')
+                if filtered_df.loc[0, 'Shift 3'] == 'True':
+                    print('"MALAM"')
+            statShift = False
+        elif filtered_df.loc[0, 'Shift 2'] == 'True':
+            print('"SIANG"')
+            if filtered_df.loc[0, 'Shift 3'] == 'True':
+                print('"MALAM"')
+            statShift = False
+        elif filtered_df.loc[0, 'Shift 3'] == 'True':
+            print('"MALAM"')
+            statShift = False
+
+        if statShift == True:
+            print('"TIDAK ADA"')
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
-    # FITUR 2 
+    # FITUR 2 SELESAI
 
     elif menu_choice == '3':  # FITUR 3 REKAPITULASI PRESENSI
         os.system('cls')
@@ -841,7 +852,7 @@ def akun_pertama():
 
 kolom_admin = ['ID','Nama','Posisi','Bidang','Password']
 kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3','Password']
-kolom_presensi = ['Tanggal','Waktu','ID', 'Nama','Shift','kehadiran']
+kolom_presensi = ['Tanggal','Waktu','ID', 'Nama','Shift','kehadiran','Waktu']
 
 
 now_time = datetime.datetime.now()
