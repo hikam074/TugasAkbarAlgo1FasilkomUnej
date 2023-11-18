@@ -1,11 +1,13 @@
-import csv                  # import csv
-import os                   # agar bisa clean terminal
-import pandas as pd         # import pandas
-import numpy as np          # import numpy
-from pathlib import Path    # import modul path
-import datetime             # import time and date
-import tabulate             # import nice table
+import csv                              # import csv
+import os                               # agar bisa clean terminal
+import pandas as pd                     # import pandas
+import numpy as np                      # import numpy
+from pathlib import Path                # import modul path
+import datetime                         # import time and date
+import tabulate                         # import nice table
 from datetimerange import DateTimeRange # import range waktu
+from datetime import timedelta          # melakukan operasi matematika pada objek datetime
+import calendar                         # import kalender untuk melakukan operasi kalender
 
 # HALAMAN LOGIN DAN LAUNCH PAGE ------------------------------------------------------------------------------------------------------------------------------
 def launchPage():
@@ -455,7 +457,7 @@ def main_page_admin():
                     data_presensi.append(row)
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)        # memasukkan data list ke pandas
             df = df.sort_values(by='Tanggal',ascending=True)
-            print((df.to_string(index=False)))                                # menampilkan data
+            print(tabulate.tabulate(df, headers='keys', tablefmt='grid', showindex=False))  # menampilkan data
             input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()
         # FITUR 4.3 
@@ -541,7 +543,7 @@ def main_page_admin():
                 for row in reader_presensi:
                     data_presensi.append(row)
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)
-            print(df)
+            print(tabulate.tabulate(df, headers='keys', tablefmt='grid', showindex=False)) #Menampilkan data presensi dengan tabulate agar terlihat rapi
             masukkan_tanggal_presensi = str(input("\nMasukkan tanggal yang dicari :"))
 
             filtered_df = df.loc[df['Tanggal'].str.contains(masukkan_tanggal_presensi)]        
@@ -550,16 +552,22 @@ def main_page_admin():
             masukkan_hapus_presensi = input("\nMasukkan index yang hendak dihapus : ")
             if int(masukkan_hapus_presensi) in range(len(df)):
                 df = df.drop(int(masukkan_hapus_presensi))
+
+                # Konversi semua kolom ke dalam string sebelum menyimpan
+                df = df.astype(str)
+
+                # Simpan DataFrame yang telah diubah ke dalam file CSV
                 np.savetxt("presensi_database.csv",df,delimiter=',',fmt='% s')
                 print(f"\nData {masukkan_hapus_presensi} berhasil dihapus!\nData saat ini :\n\n{df}")
             else:
                 input("Kesalahan input atau data tidak ada")
             input("Tekan [enter] untuk kembali ke Main Menu")
-        # FITUR 5.3
+            main_page_admin()
+        # FITUR 5.3 SELESAI
 
         else:
             main_page_admin()
-    # FITUR 5
+    # FITUR 5 SELESAI
 
     elif menu_choice == '6':    # kembali ke login page
         launch_page_condition = True
@@ -736,24 +744,63 @@ def main_page_employee():   # FITUR KARYAWAN
         os.system('cls')
         with open('presensi_database.csv', 'r') as presensi_file:
             data_presensi = presensi_file.readlines()
-        total_kehadiran = len(data_presensi)
-        total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
-        persentase_kehadiran = (total_kehadiran / total_hari_kerja) * 100
-        print('\nkaryawan>menu utama>rekapitulasi presensi\n================ REKAPITULASI PRESENSI ================\n')
+
         # Membuat DataFrame Pandas dari data presensi
-        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi], columns=["Tanggal", "ID", "Nama", "Shift","Kehadiran"])
+        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],columns=["Tanggal", "ID", "Nama", "Shift", "Kehadiran", "Waktu"])
+
         # Filter DataFrame berdasarkan ID yang sudah login
         filtered_df = df.loc[df['ID'] == launch_ID]
+
         # Menampilkan DataFrame yang sudah difilter sebagai tabel
-        print(filtered_df)
-        print(f"\nTotal Kehadiran: {len(filtered_df)}")
-        print(f"Persentase Kehadiran: {persentase_kehadiran:.2f}%")
+        print(filtered_df.to_string(index=False))
+
+        # Pilihan untuk rekap mingguan atau bulanan
+        rekap_choice = input("\nPilih jenis rekapitulasi [1] Minggu Ini [2] Minggu Lalu [3] Bulan Ini [4] Bulan Lalu : ")
+
+        now = datetime.datetime.now()
+
+        if rekap_choice == '1':  # Minggu Ini
+            start_date = (now - timedelta(days=now.weekday())).strftime('%Y-%m-%d')
+            end_date = (now + timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
+
+        elif rekap_choice == '2':  # Minggu Lalu
+            start_date = (now - timedelta(days=(now.weekday() + 7))).strftime('%Y-%m-%d')
+            end_date = (now - timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
+
+        elif rekap_choice == '3':  # Bulan Ini
+            start_date = f'{now.year}-{now.month:02d}-01'
+            last_day = calendar.monthrange(now.year, now.month)[1]
+            end_date = f'{now.year}-{now.month:02d}-{last_day}'
+
+        elif rekap_choice == '4':  # Bulan Lalu
+            last_month = (now.replace(day=1) - timedelta(days=1)).replace(day=1)
+            start_date = f'{last_month.year}-{last_month.month:02d}-01'
+            last_day = calendar.monthrange(last_month.year, last_month.month)[1]
+            end_date = f'{last_month.year}-{last_month.month:02d}-{last_day}'
+
+        # Filter DataFrame berdasarkan tanggal
+        filtered_df = filtered_df.loc[(filtered_df['Tanggal'] >= start_date) & (filtered_df['Tanggal'] <= end_date)]
+
+        # Menghitung statistik kehadiran
+        total_kehadiran = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'HADIR'])
+        total_telat = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TERLAMBAT'])
+        total_tidak_hadir = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TIDAK HADIR'])
+
+        total_hari_kerja = total_kehadiran + total_tidak_hadir  # Total hari kerja dihitung berdasarkan jumlah data presensi
+
+        # Menampilkan statistik kehadiran
+        print(f"\nTotal Kehadiran: {total_kehadiran}")
+        print(f"Total Telat: {total_telat}")
+        print(f"Total Tidak Hadir: {total_tidak_hadir}")
+        print(f"Persentase Kehadiran: {total_kehadiran / total_hari_kerja * 100:.2f}%")
+
+        input("\nTekan [enter] untuk kembali ke Main Menu")
+        main_page_employee()
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
     # FITUR 3 
 
     elif menu_choice == '4':  # FITUR 4 LIHAT DATA PRESENSI ANDA
-
         os.system('cls')  # Membersihkan layar konsol
         print("karyawan>menu utama>lihat data presensi anda\n=============== MENU LIHAT DATA PRESENSI ANDA ===============\n")
         with open('presensi_database.csv', 'r') as presensi_file:
@@ -761,11 +808,11 @@ def main_page_employee():   # FITUR KARYAWAN
         total_kehadiran = len(data_presensi)
         total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
         df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
-        columns=["Tanggal", "ID", "Nama", "Shift","kehadiran"])
+        columns=["Tanggal", "ID", "Nama", "Shift","kehadiran","Waktu"])
         # Filter DataFrame berdasarkan ID yang sudah login
         filtered_df = df.loc[df['ID'] == launch_ID]
         # Menampilkan DataFrame yang sudah difilter sebagai tabel
-        print(filtered_df)
+        print(filtered_df.to_string(index=False))
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
     # FITUR 4 
@@ -850,10 +897,19 @@ def akun_pertama():
             admin_list.writeheader()
 # FITUR AKUN PERTAMA SELESAI
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# PERKOLOMAN--------------------------------------------------------------------------------------------------------------------------------------------------
+
 kolom_admin = ['ID','Nama','Posisi','Bidang','Password']
 kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3','Password']
-kolom_presensi = ['Tanggal','Waktu','ID', 'Nama','Shift','kehadiran','Waktu']
+kolom_presensi = ['Tanggal','ID', 'Nama','Shift','kehadiran','Waktu']
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# PERWAKTUAN--------------------------------------------------------------------------------------------------------------------------------------------------
 
 now_time = datetime.datetime.now()
 waktuReal = now_time.strftime("\r%A, %d %B %Y | %H:%M:%S")
@@ -865,6 +921,35 @@ timeRangeSiang = DateTimeRange("10:00:00", "15:59:59")
 timeRangeMalam = DateTimeRange("16:00:00", "21:59:59")
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# PERKALENDERAN-----------------------------------------------------------------------------------------------------------------------------------------------
+
+def get_week_date_range(week_choice):
+    now = datetime.datetime.now()
+    current_week = now.isocalendar()[1]
+    current_year = now.year
+
+    if week_choice == 1:  # Minggu ini
+        start_date = (now - timedelta(days=now.weekday())).strftime('%Y-%m-%d')
+        end_date = (now + timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
+    elif week_choice == 2:  # Minggu lalu
+        start_date = (now - timedelta(days=(now.weekday() + 7))).strftime('%Y-%m-%d')
+        end_date = (now - timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
+
+    return start_date, end_date
+
+def get_month_date_range(month_choice, year_choice):
+    start_date = f'{year_choice}-{month_choice:02d}-01'
+    last_day = calendar.monthrange(year_choice, month_choice)[1]
+    end_date = f'{year_choice}-{month_choice:02d}-{last_day}'
+
+    return start_date, end_date
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# EKSEKUSI----------------------------------------------------------------------------------------------------------------------------------------------------
 
 akun_pertama()
 launchPage()
