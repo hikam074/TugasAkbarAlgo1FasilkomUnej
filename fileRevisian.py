@@ -3,8 +3,8 @@ import os                               # agar bisa clean terminal
 import pandas as pd                     # import pandas
 import numpy as np                      # import numpy
 from pathlib import Path                # import modul path
-import datetime                         # import time and date
 import tabulate                         # import nice table
+import datetime                         # import time and date
 from datetimerange import DateTimeRange # import range waktu
 from datetime import timedelta          # melakukan operasi matematika pada objek datetime
 import calendar                         # import kalender untuk melakukan operasi kalender
