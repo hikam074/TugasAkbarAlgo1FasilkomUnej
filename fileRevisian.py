@@ -746,7 +746,8 @@ def main_page_employee():   # FITUR KARYAWAN
             data_presensi = presensi_file.readlines()
 
         # Membuat DataFrame Pandas dari data presensi
-        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],columns=["Tanggal", "ID", "Nama", "Shift", "Kehadiran", "Waktu"])
+        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
+                        columns=["Tanggal", "ID", "Nama", "Shift", "Kehadiran", "Waktu"])
 
         # Filter DataFrame berdasarkan ID yang sudah login
         filtered_df = df.loc[df['ID'] == launch_ID]
@@ -757,6 +758,70 @@ def main_page_employee():   # FITUR KARYAWAN
         # Pilihan untuk rekap mingguan atau bulanan
         rekap_choice = input("\nPilih jenis rekapitulasi [1] Minggu Ini [2] Minggu Lalu [3] Bulan Ini [4] Bulan Lalu : ")
 
+        now = datetime.datetime.now()
+
+        if rekap_choice == '1':  # Minggu Ini
+            start_date = (now - timedelta(days=now.weekday())).strftime('%Y-%m-%d')
+            end_date = (now + timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
+            total_days = 7
+
+        elif rekap_choice == '2':  # Minggu Lalu
+            start_date = (now - timedelta(days=(now.weekday() + 7))).strftime('%Y-%m-%d')
+            end_date = (now - timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
+            total_days = 7
+
+        elif rekap_choice == '3':  # Bulan Ini
+            start_date = f'{now.year}-{now.month:02d}-01'
+            last_day = calendar.monthrange(now.year, now.month)[1]
+            end_date = f'{now.year}-{now.month:02d}-{last_day}'
+            total_days = last_day
+
+        elif rekap_choice == '4':  # Bulan Lalu
+            last_month = (now.replace(day=1) - timedelta(days=1)).replace(day=1)
+            start_date = f'{last_month.year}-{last_month.month:02d}-01'
+            last_day = calendar.monthrange(last_month.year, last_month.month)[1]
+            end_date = f'{last_month.year}-{last_month.month:02d}-{last_day}'
+            total_days = last_day
+
+        # Filter DataFrame berdasarkan tanggal
+        filtered_df = filtered_df.loc[(filtered_df['Tanggal'] >= start_date) & (filtered_df['Tanggal'] <= end_date)]
+
+        # Menghitung statistik kehadiran
+        total_kehadiran_tepat_waktu = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'HADIR'])
+        total_terlambat = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TERLAMBAT'])
+        total_kehadiran = total_kehadiran_tepat_waktu + total_terlambat
+        total_tidak_hadir = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TIDAK HADIR'])
+
+        total_hari_kerja = total_kehadiran + total_tidak_hadir  # Total hari kerja dihitung berdasarkan jumlah data presensi
+
+        # Menampilkan statistik kehadiran
+        print(f"\nTotal Kehadiran: {total_kehadiran}")
+
+        # Rincian Total Kehadiran
+        print("\nRincian:")
+        print(f"  Total Hadir Tepat Waktu: {total_kehadiran_tepat_waktu}")
+        print(f"  Total Terlambat: {total_terlambat}")
+
+        print(f"\nTotal Tidak Hadir: {total_tidak_hadir}")
+
+        # Persentase Kehadiran
+        print(f"\nPersentase Kehadiran: {total_kehadiran / total_days * 100:.2f}% dari 100%")
+
+        input("\nTekan [enter] untuk kembali ke Main Menu")
+        main_page_employee()
+    # FITUR 3 
+
+    elif menu_choice == '4':  # FITUR 4 LIHAT DATA PRESENSI ANDA
+
+        os.system('cls')  # Membersihkan layar konsol
+        print("karyawan>menu utama>lihat data presensi anda\n=============== MENU LIHAT DATA PRESENSI ANDA ===============\n")
+        with open('presensi_database.csv', 'r') as presensi_file:
+            data_presensi = presensi_file.readlines()
+        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],columns=["Tanggal", "ID", "Nama", "Shift","kehadiran","Waktu"])
+        
+        filtered_df = df.loc[df['ID'] == launch_ID]
+        rekap_choice = input("\nPilih jenis rekapitulasi\n[1] Minggu Ini\n[2] Minggu Lalu\n[3] Bulan Ini\n[4] Bulan Lalu\n[5] Lihat data keseluruhan\nSilahkan pilih menu : ")
+        os.system('cls')
         now = datetime.datetime.now()
 
         if rekap_choice == '1':  # Minggu Ini
@@ -777,77 +842,67 @@ def main_page_employee():   # FITUR KARYAWAN
             start_date = f'{last_month.year}-{last_month.month:02d}-01'
             last_day = calendar.monthrange(last_month.year, last_month.month)[1]
             end_date = f'{last_month.year}-{last_month.month:02d}-{last_day}'
+            
+        elif rekap_choice == '5' :
+            print (filtered_df.to_string(index=False))
+            input("\nTekan [enter] untuk kembali ke Main Menu")
+            main_page_employee()
+            # Filter DataFrame berdasarkan tanggal
 
-        # Filter DataFrame berdasarkan tanggal
+        else :
+            print("Input yang anda masukan salah")
+            input("Tekan enter untuk kembali ke menu")
+            main_page_employee()
+            
         filtered_df = filtered_df.loc[(filtered_df['Tanggal'] >= start_date) & (filtered_df['Tanggal'] <= end_date)]
-
-        # Menghitung statistik kehadiran
-        total_kehadiran = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'HADIR'])
-        total_telat = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TERLAMBAT'])
-        total_tidak_hadir = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TIDAK HADIR'])
-
-        total_hari_kerja = total_kehadiran + total_tidak_hadir  # Total hari kerja dihitung berdasarkan jumlah data presensi
-
-        # Menampilkan statistik kehadiran
-        print(f"\nTotal Kehadiran: {total_kehadiran}")
-        print(f"Total Telat: {total_telat}")
-        print(f"Total Tidak Hadir: {total_tidak_hadir}")
-        print(f"Persentase Kehadiran: {total_kehadiran / total_hari_kerja * 100:.2f}%")
-
-        input("\nTekan [enter] untuk kembali ke Main Menu")
-        main_page_employee()
-        input("\nTekan [enter] untuk kembali ke Main Menu")
-        main_page_employee()
-    # FITUR 3 
-
-    elif menu_choice == '4':  # FITUR 4 LIHAT DATA PRESENSI ANDA
-        os.system('cls')  # Membersihkan layar konsol
-        print("karyawan>menu utama>lihat data presensi anda\n=============== MENU LIHAT DATA PRESENSI ANDA ===============\n")
-        with open('presensi_database.csv', 'r') as presensi_file:
-            data_presensi = presensi_file.readlines()
-        total_kehadiran = len(data_presensi)
-        total_hari_kerja = total_kehadiran  # Total hari kerja dihitung berdasarkan jumlah data presensi
-        df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],
-        columns=["Tanggal", "ID", "Nama", "Shift","kehadiran","Waktu"])
-        # Filter DataFrame berdasarkan ID yang sudah login
-        filtered_df = df.loc[df['ID'] == launch_ID]
-        # Menampilkan DataFrame yang sudah difilter sebagai tabel
         print(filtered_df.to_string(index=False))
+
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
+
     # FITUR 4 
 
     elif menu_choice == '5':  # FITUR 5 EULA
         os.system('cls')
         eula_text = """
         End User License Agreement (EULA)
+        Selamat datang di Program UpSence, program sistem presensi karyawan toko berbasis terminal. UpSence dibuat menggunakan bahasa pemrograman Python.
+        Sebelum menggunakan Program UpSence harap baca ketentuan penggunaan program kami berikut: 
         
-        Terima kasih telah menggunakan program kami.
-        Mohon baca dan pahami syarat-syarat berikut sebelum melanjutkan:
         
         1. Program ini hanya boleh digunakan oleh karyawan yang sah dan telah terdaftar dalam sistem kami.
         2. Dilarang menggunakan program ini untuk tujuan selain yang telah ditentukan.
         3. Setiap aktivitas yang terekam dalam program berkaitan dengan pengguna yang bersangkutan menjadi tanggung jawab yang bersangkutan.
         4. Kami akan menyimpan data yang terkait dengan penggunaan program ini sesuai dengan kebijakan.
         5. DILARANG mengubah dan memodifikasi program ini kemudian mendistribusikannya tanpa seijin kami
-        6. Pengguna bisa menggunakan Program ini pada perangkat komputer mana saja [linux, Windows, MacOS(dengan kode yang disesuaikan)]
+        6. Pengguna bisa menggunakan Program ini pada perangkat komputer mana saja [linux, Windows, MacOS(Jika akan digunakan pada sistem operasi Mac, 
+           maka perlu mengubah perintah 'cls' menjadi 'clear')]
+        
+        Dengan melanjutkan, Anda menyetujui semua syarat dan ketentuan diatas.
 
-        Tata Cara Operasi Program Sebagai Admin:
-        a. Apabila Merupakan Admin Pertama, buat akun terlebih dahulu sesuai urutan yang telah disediakan.
-        b. Masukkan ID admin dan password pada halaman login admin.
-        c. Pilih menu yang sesuai dengan tugas admin (tambah karyawan, hapus karyawan, lihat rekap presensi, dll.)
-        
-        Tata Cara Pemakaian Karyawan:
-        a. Masukkan ID karyawan dan password pada halaman login.
-        b. Pilih menu yang diinginkan untuk melanjutkan (presensi, lihat jadwal, lihat rekap absensi, dll.).
+        Setelah anda menyetujui ketentuan diatas, berikut adalah fitur UpSence:
 
+        -Fitur Admin
+        1. Admin dapat menambah maupun mengurangi pengguna yang dapat menggunakan program ini.
+        2. Admin dapat melihat dan mengedit Presensi Karyawan, kemudian bisa melihat rekap atas presensi tersebut.
         
-        Dengan melanjutkan, Anda menyetujui semua syarat dan ketentuan diatas."""
+        -Fitur Karyawan
+        1. Karyawan dapat melakukan presensi sesuai dengan ketentuan yang dibuat oleh admin
+        2. Apabila Karyawan melakukan presensi diluar jamnya namun masih di hari yang sama akan tercatat sebagai terlambat
+           namun apabila sudah keluar dari harinya, maka akan tercatat sebagai tidak hadir.
+        3. Karyawan dapat melakukan pengecekan terhadap presensinya sendiri seperti shift, dan rekapitulasi presensinya sendiri.
+
+        -Informasi tambahan
+        1. Pada menu rekapitulasi presensi ada rekapitulasi mingguan, bulanan, dan seluruh data presensi yang bisa dilihat.
+        2. Karyawan hanya dapat melihat rekapitulasi presensinya sendiri, Admin dapat melihat seluruh Presensi Karyawan.
         
+        Termia kasih telah menggunakan program UpSence.
+        
+        """
         print(eula_text)
         input("\n        Tekan [enter] untuk kembali ke menu utama")
         main_page_employee()
-    # FITUR 5 
+    # FITUR 5 SELESAI
 
     elif menu_choice == '6':  # FITUR 6 KELUAR
         launch_page_condition = True
@@ -925,26 +980,11 @@ timeRangeMalam = DateTimeRange("16:00:00", "21:59:59")
 
 # PERKALENDERAN-----------------------------------------------------------------------------------------------------------------------------------------------
 
-def get_week_date_range(week_choice):
-    now = datetime.datetime.now()
-    current_week = now.isocalendar()[1]
-    current_year = now.year
-
-    if week_choice == 1:  # Minggu ini
-        start_date = (now - timedelta(days=now.weekday())).strftime('%Y-%m-%d')
-        end_date = (now + timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
-    elif week_choice == 2:  # Minggu lalu
-        start_date = (now - timedelta(days=(now.weekday() + 7))).strftime('%Y-%m-%d')
-        end_date = (now - timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
-
-    return start_date, end_date
-
-def get_month_date_range(month_choice, year_choice):
-    start_date = f'{year_choice}-{month_choice:02d}-01'
-    last_day = calendar.monthrange(year_choice, month_choice)[1]
-    end_date = f'{year_choice}-{month_choice:02d}-{last_day}'
-
-    return start_date, end_date
+def calculate_percentage(present_days, total_days):
+    if total_days != 0:
+        return present_days / total_days * 100
+    else:
+        return 0.0 #biar gak 0
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
