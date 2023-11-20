@@ -763,25 +763,21 @@ def main_page_employee():   # FITUR KARYAWAN
         if rekap_choice == '1':  # Minggu Ini
             start_date = (now - timedelta(days=now.weekday())).strftime('%Y-%m-%d')
             end_date = (now + timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
-            total_days = 7
 
         elif rekap_choice == '2':  # Minggu Lalu
             start_date = (now - timedelta(days=(now.weekday() + 7))).strftime('%Y-%m-%d')
             end_date = (now - timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
-            total_days = 7
 
         elif rekap_choice == '3':  # Bulan Ini
             start_date = f'{now.year}-{now.month:02d}-01'
             last_day = calendar.monthrange(now.year, now.month)[1]
             end_date = f'{now.year}-{now.month:02d}-{last_day}'
-            total_days = last_day
 
         elif rekap_choice == '4':  # Bulan Lalu
             last_month = (now.replace(day=1) - timedelta(days=1)).replace(day=1)
             start_date = f'{last_month.year}-{last_month.month:02d}-01'
             last_day = calendar.monthrange(last_month.year, last_month.month)[1]
             end_date = f'{last_month.year}-{last_month.month:02d}-{last_day}'
-            total_days = last_day
 
         # Filter DataFrame berdasarkan tanggal
         filtered_df = filtered_df.loc[(filtered_df['Tanggal'] >= start_date) & (filtered_df['Tanggal'] <= end_date)]
@@ -792,7 +788,8 @@ def main_page_employee():   # FITUR KARYAWAN
         total_kehadiran = total_kehadiran_tepat_waktu + total_terlambat
         total_tidak_hadir = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TIDAK HADIR'])
 
-        total_hari_kerja = total_kehadiran + total_tidak_hadir  # Total hari kerja dihitung berdasarkan jumlah data presensi
+        total_days = len(filtered_df['Tanggal'].unique())  # Total days of attendance
+        total_hari = total_kehadiran + total_tidak_hadir
 
         # Menampilkan statistik kehadiran
         print(f"\nTotal Kehadiran: {total_kehadiran}")
@@ -805,7 +802,11 @@ def main_page_employee():   # FITUR KARYAWAN
         print(f"\nTotal Tidak Hadir: {total_tidak_hadir}")
 
         # Persentase Kehadiran
-        print(f"\nPersentase Kehadiran: {total_kehadiran / total_days * 100:.2f}% dari 100%")
+        if total_hari > 0:
+            attendance_percentage = round((total_kehadiran / total_hari * 100))
+            print(f"\nPersentase Kehadiran ({start_date} sampai {end_date}): {attendance_percentage}% ({total_kehadiran} dari {total_hari} hari kerja)")
+        else:
+            print("\nTidak ada data kehadiran pada periode yang dipilih.")
 
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()
@@ -984,7 +985,7 @@ def calculate_percentage(present_days, total_days):
     if total_days != 0:
         return present_days / total_days * 100
     else:
-        return 0.0 #biar gak 0
+        return 0.0  # biar gak 0
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
