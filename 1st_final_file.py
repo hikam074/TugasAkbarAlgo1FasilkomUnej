@@ -12,20 +12,24 @@ import calendar                         # import kalender untuk melakukan operas
 
 # HALAMAN LOGIN DAN LAUNCH PAGE ------------------------------------------------------------------------------------------------------------------------------
 def launchPage():
+
+    # WELCOME PAGE
+    os.system('cls')
+    print(logoLaunch)
+    input("\n\nTekan [enter] untuk melanjutkan")
+
     launch_page_condition = True
     while launch_page_condition:
 
         # LOADING PAGE
         os.system('cls')
-        print(logo)
-        input("\nUpSence : Aplikasi Presensi Berbasis Python.\n\nby ©Kelompok 2 TA Algo1\n\n\nTekan [enter] untuk melanjutkan")
-        
-        os.system('cls')
-        print(f"+{'='*88}+\n|{' '*20}SELAMAT DATANG DI LAUNCH PAGE APLIKASI PRESENSI{' '*21}|\n|{' '*88}|\n+{'='*88}+\n")
+        print(logoBorder)
+        print(launchInterface)
         launch_menu = input("Tekan [enter] untuk login, tekan [Q] untuk keluar program : ")
         if launch_menu == '':
             os.system('cls')
-            print(f"+{'='*88}+\n|{' '*30}SELAMAT DATANG DI MENU LOGIN{' '*30}|\n|{' '*25}silahkan masukkan kredensial LOGIN anda{' '*24}|\n+{'='*88}+")
+            print(logoBorder)
+            print(loginInterface)
             global launch_ID
             launch_ID = input("Masukkan ID anda : ")
             global launchPass
@@ -71,7 +75,9 @@ def launchPage():
                     launch_page_condition = True
 
         elif launch_menu in 'Qq':
-            print("\n\n\nTerimakasih telah memakai program ini\n\nMenutup program ...\n\n\n©Kelompok 2 Tugas Akhir Algo 1\n2023\n\n\n")
+            os.system('cls')
+            print(f"{logoLaunch}\nTerimakasih telah memakai program ini\n\nMenutup program ... Done\n\n\n©Kelompok 2 Tugas Akhir Algo 1\n2023\n\n")
+            launch_page_condition = False
             break
 
         else:
@@ -968,43 +974,8 @@ def main_page_employee():   # FITUR KARYAWAN
 
     elif menu_choice == '5':  # FITUR 5 EULA
         os.system('cls')
-        eula_text = """
-        End User License Agreement (EULA)
-        Selamat datang di Program UpSence, program sistem presensi karyawan toko berbasis terminal. UpSence dibuat menggunakan bahasa pemrograman Python.
-        Sebelum menggunakan Program UpSence harap baca ketentuan penggunaan program kami berikut: 
-        
-        
-        1. Program ini hanya boleh digunakan oleh karyawan yang sah dan telah terdaftar dalam sistem kami.
-        2. Dilarang menggunakan program ini untuk tujuan selain yang telah ditentukan.
-        3. Setiap aktivitas yang terekam dalam program berkaitan dengan pengguna yang bersangkutan menjadi tanggung jawab yang bersangkutan.
-        4. Kami akan menyimpan data yang terkait dengan penggunaan program ini sesuai dengan kebijakan.
-        5. DILARANG mengubah dan memodifikasi program ini kemudian mendistribusikannya tanpa seijin kami
-        6. Pengguna bisa menggunakan Program ini pada perangkat komputer mana saja [linux, Windows, MacOS(Jika akan digunakan pada sistem operasi Mac, 
-           maka perlu mengubah perintah 'cls' menjadi 'clear')]
-        
-        Dengan melanjutkan, Anda menyetujui semua syarat dan ketentuan diatas.
-
-        Setelah anda menyetujui ketentuan diatas, berikut adalah fitur UpSence:
-
-        -Fitur Admin
-        1. Admin dapat menambah maupun mengurangi pengguna yang dapat menggunakan program ini.
-        2. Admin dapat melihat dan mengedit Presensi Karyawan, kemudian bisa melihat rekap atas presensi tersebut.
-        
-        -Fitur Karyawan
-        1. Karyawan dapat melakukan presensi sesuai dengan ketentuan yang dibuat oleh admin
-        2. Apabila Karyawan melakukan presensi diluar jamnya namun masih di hari yang sama akan tercatat sebagai terlambat
-           namun apabila sudah keluar dari harinya, maka akan tercatat sebagai tidak hadir.
-        3. Karyawan dapat melakukan pengecekan terhadap presensinya sendiri seperti shift, dan rekapitulasi presensinya sendiri.
-
-        -Informasi tambahan
-        1. Pada menu rekapitulasi presensi ada rekapitulasi mingguan, bulanan, dan seluruh data presensi yang bisa dilihat.
-        2. Karyawan hanya dapat melihat rekapitulasi presensinya sendiri, Admin dapat melihat seluruh Presensi Karyawan.
-        
-        Termia kasih telah menggunakan program UpSence.
-        
-        """
         print(eula_text)
-        input("\n        Tekan [enter] untuk kembali ke menu utama")
+        input("\nTekan [enter] untuk kembali ke menu utama")
         main_page_employee()
     # FITUR 5 SELESAI DAN UI
 
@@ -1059,7 +1030,7 @@ def akun_pertama():
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-# PERKOLOMAN--------------------------------------------------------------------------------------------------------------------------------------------------
+# PERKOLOMAN DAN DESAIN---------------------------------------------------------------------------------------------------------------------------------------
 
 kolom_admin = ['ID','Nama','Posisi','Bidang','Password']
 kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3','Password']
@@ -1075,6 +1046,64 @@ logoPart7 = (r"        | |                               ")
 logoPart8 = (r"        |_|                               ")
 
 logo = f'{logoPart1}\n{logoPart2}\n{logoPart3}\n{logoPart4}\n{logoPart5}\n{logoPart6}\n{logoPart7}\n{logoPart8}'
+logoLaunch = f'++{'='*50}++\n||{' '*50}||\n||{' '*4}{logoPart1}{' '*4}||\n||{' '*4}{logoPart2}{' '*4}||\n||{' '*4}{logoPart3}{' '*4}||\n||{' '*4}{logoPart4}{' '*4}||\n||{' '*4}{logoPart5}{' '*4}||\n||{' '*4}{logoPart6}{' '*4}||\n||{' '*4}{logoPart7}{' '*4}||\n||{' '*4}{logoPart8}{' '*4}||\n||{' '*50}||\n||{' '*4}UpSence : Aplikasi Presensi Berbasis Python{' '*3}||\n||{' '*50}||\n||{' '*13}by ©Kelompok 2 TA Algo1{' '*14}||\n++{'='*50}++'
+logoBorder = f'++{'='*86}++\n||{' '*22}{logoPart1}{' '*22}||\n||{' '*22}{logoPart2}{' '*22}||\n||{' '*22}{logoPart3}{' '*22}||\n||{' '*22}{logoPart4}{' '*22}||\n||{' '*22}{logoPart5}{' '*22}||\n||{' '*22}{logoPart6}{' '*22}||\n||{' '*22}{logoPart7}{' '*22}||\n||{' '*22}{logoPart8}{' '*22}||\n||{' '*86}||\n||{' '*27}Aplikasi Presensi Berbasis Python{' '*26}||\n++{'='*86}++'
+
+launchInterface = f"+{'='*88}+\n|{' '*88}|\n|{' '*20}SELAMAT DATANG DI LAUNCH PAGE APLIKASI PRESENSI{' '*21}|\n|{' '*88}|\n+{'='*88}+\n"
+loginInterface = f"+{'='*88}+\n|{' '*30}SELAMAT DATANG DI MENU LOGIN{' '*30}|\n|{' '*25}silahkan masukkan kredensial LOGIN anda{' '*24}|\n+{'='*88}+"
+
+eula_text = f"""\n{logoBorder}
+
+                            END USER LICENSE AGREEMENT (EULA)
+
+Selamat datang di Program UpSence, program sistem presensi karyawan toko berbasis terminal.
+UpSence dibuat menggunakan bahasa pemrograman Python.
+
+Sebelum menggunakan Program UpSence harap baca ketentuan penggunaan program kami berikut: 
+        
+    1. Program ini hanya boleh digunakan oleh karyawan yang telah terdaftar dalam sistem.
+    2. Dilarang menggunakan program ini untuk tujuan selain yang telah ditentukan.
+    3. Setiap aktivitas yang direkam oleh pengguna dalam program berkaitan dengan
+       pengguna yang bersangkutan menjadi tanggung jawab yang bersangkutan.
+    4. Kami akan menyimpan data yang terkait dengan penggunaan program ini sesuai dengan
+       kebijakan.
+    5. DILARANG mengubah dan memodifikasi program ini kemudian mendistribusikannya
+       tanpa seizin kami
+    6. Pengguna bisa menggunakan Program ini pada perangkat komputer dengan sistem operasi
+       Windows dan MacOS
+    7. Jika program ini akan digunakan pada sistem operasi Mac, maka perlu mengubah
+       perintah 'cls' menjadi 'clear'
+        
+Dengan melanjutkan, Anda menyetujui semua syarat dan ketentuan diatas.
+
+
+        Setelah anda menyetujui ketentuan diatas, berikut adalah fitur UpSence:
+
+-Fitur Admin
+    1. Admin dapat menambah dan mengurangi pengguna yang dapat menggunakan program ini.
+    2. Admin dapat melihat dan mengedit Data Karyawan dan Presensi Karyawan,
+       kemudian bisa melihat rekap atas presensi tersebut.
+        
+-Fitur Karyawan
+    1. Karyawan dapat melakukan presensi sesuai dengan ketentuan yang dibuat oleh admin
+    2. Apabila Karyawan melakukan presensi diluar jam presensi namun masih di jam shift
+       maka akan tercatat sebagai terlambat, namun apabila sudah keluar dari jam shift,
+       maka akan tercatat sebagai tidak hadir.
+    3. Karyawan dapat melakukan pengecekan terhadap presensinya sendiri,
+       seperti shift dan rekapitulasi presensi miliknya sendiri.
+
+-Informasi tambahan
+    1. Pada menu rekapitulasi presensi terdapat fitur rekapitulasi,
+       yang terdiri dari mingguan, bulanan, dan seluruh data presensi yang bisa dilihat.
+    2. Karyawan hanya dapat melihat rekapitulasi presensinya sendiri,
+       sedangkan Admin dapat melihat seluruh Presensi Karyawan.
+        
+
+                    Terima kasih telah menggunakan program UpSence
+
+
+©Kelompok 2 TA Algo1
+"""
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
