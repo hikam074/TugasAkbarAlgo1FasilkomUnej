@@ -1,4 +1,3 @@
-
 import csv                              # import csv
 import os                               # agar bisa clean terminal
 import pandas as pd                     # import pandas
@@ -704,7 +703,7 @@ def main_page_employee():   # FITUR KARYAWAN
                     x = datetime.datetime.now().strftime("%H:%M:%S")
                     if x in DateTimeRange("04:00:00","23:59:59"):
                         if x in time_range :
-                            status_kehadiran = "HADIR"
+                            status_kehadiran = "HADIR" 
                         elif x in timeRangePagi:
                             status_kehadiran = "TERLAMBAT"
                         else :
@@ -1025,6 +1024,13 @@ def akun_pertama():
         with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
             admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
             admin_list.writeheader()
+
+    # apabila database histori belum ada
+    if not(Path('histori_database.csv').is_file()):
+        #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
+        presensi = open('histori_database.csv', 'w')
+        presensi.close()
+
 # FITUR AKUN PERTAMA SELESAI
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1032,10 +1038,12 @@ def akun_pertama():
 
 # PERKOLOMAN DAN DESAIN---------------------------------------------------------------------------------------------------------------------------------------
 
+# kolom esensial
 kolom_admin = ['ID','Nama','Posisi','Bidang','Password']
 kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3','Password']
 kolom_presensi = ["Tanggal", "ID", "Nama", "Shift", "Kehadiran", "Waktu"]
 
+#logo-logo
 logoPart1 = (r"  _    _       _____                      ")
 logoPart2 = (r" | |  | |     / ____|                     ")
 logoPart3 = (r" | |  | |_ __| (___   ___ _ __   ___ ___  ")
@@ -1052,6 +1060,7 @@ logoBorder = f'++{'='*86}++\n||{' '*22}{logoPart1}{' '*22}||\n||{' '*22}{logoPar
 launchInterface = f"+{'='*88}+\n|{' '*88}|\n|{' '*20}SELAMAT DATANG DI LAUNCH PAGE APLIKASI PRESENSI{' '*21}|\n|{' '*88}|\n+{'='*88}+\n"
 loginInterface = f"+{'='*88}+\n|{' '*30}SELAMAT DATANG DI MENU LOGIN{' '*30}|\n|{' '*25}silahkan masukkan kredensial LOGIN anda{' '*24}|\n+{'='*88}+"
 
+# eula
 eula_text = f"""\n{logoBorder}
 
                             END USER LICENSE AGREEMENT (EULA)
@@ -1108,22 +1117,25 @@ Dengan melanjutkan, Anda menyetujui semua syarat dan ketentuan diatas.
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-# PERWAKTUAN--------------------------------------------------------------------------------------------------------------------------------------------------
+# PERWAKTUAN DAN PERKALENDERAN--------------------------------------------------------------------------------------------------------------------------------
 
+# waktu-waktu
 now_time = datetime.datetime.now()
 waktuReal = now_time.strftime("\r%A, %d %B %Y | %H:%M:%S")
 waktuRealTanggal = now_time.strftime("%Y-%m-%d")
 waktuRealJam = now_time.strftime("%H:%M:%S")
+tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d")
 
+# range jam shift
 timeRangePagi = DateTimeRange("04:00:00", "09:59:59")
 timeRangeSiang = DateTimeRange("10:00:00", "15:59:59")
 timeRangeMalam = DateTimeRange("16:00:00", "21:59:59")
 
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------
+# untuk rekap otomatis
+startTimeRecap = "13:10:00"
+endTimeRecap = "13:58:59"
 
-
-# PERKALENDERAN-----------------------------------------------------------------------------------------------------------------------------------------------
-
+# memperbolehkan operasi dengan 0
 def calculate_percentage(present_days, total_days):
     if total_days != 0:
         return present_days / total_days * 100
