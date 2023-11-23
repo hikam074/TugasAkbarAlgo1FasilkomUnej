@@ -419,7 +419,7 @@ def main_page_admin():
             if masukan_edit_employee in df['ID'].values:    # BILA ID YANG HENDAK DIUBAH ITU ADA
                 baris_employee = df[df['ID'] == masukan_edit_employee]  # Menemukan baris yang sesuai dengan ID
                 edit_employee_profil = input(f"\nData yang akan diedit : \n{baris_employee.to_string(index=False, header=False)}\n\nPilih [1] untuk mengedit data profil karyawan atau [2] untuk mengubah shift karyawan : ")   # KONFIRMASI DATA YANG HENDAK DIEDIT, PILIHAN MENGUBAH SHIFT ATAU DATA PROFIL
-                print("Masukkan [enter] untuk melewati pengeditan")
+                print("Masukkan [enter] untuk melewati pengeditan\n")
                 if edit_employee_profil == '1':     # FITUR 2.2.1 EDIT DATA>EDIT DATA KARYAWAN>EDIT DATA PROFIL
                     
                     # MEMASUKKAN IDENTITAS BARU
@@ -455,6 +455,7 @@ def main_page_admin():
                     np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='%s')
 
                     print(f'\nData baru untuk "{df.iloc[baris_employee.index, 0:3].to_string(header=False,index=False)}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n')  # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
+                    input()
 
                 # FITUR 2.2.1 SELESAI - UI : COMMENT
 
@@ -490,11 +491,12 @@ def main_page_admin():
                     np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='%s')
 
                     print(f'\nData baru untuk "{df.iloc[baris_employee.index, 0:3].to_string(header=False,index=False)}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n')  # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
+                    input()
 
                 # FITUR 2.2.2 SELESAI - UI : COMMENT
 
                 else:
-                    print("kesalahan input, silahkan coba lagi")
+                    input("kesalahan input, silahkan coba lagi")
 
         # FITUR 2.2 SELESAI - UI :COMMENT : DESAIN
 
@@ -929,10 +931,10 @@ def main_page_employee():   # FITUR KARYAWAN
                             input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
                     
                     elif x in DateTimeRange("00:00:00", prePresensiPagi):     # ABSENSI GLOBAL BELUM DIBUKA
-                        input("\nPERHATIAN : Waku belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")     # MENGEMBALIKAN KE MENU UTAMA
+                        input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")     # MENGEMBALIKAN KE MENU UTAMA
 
                 else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT PAGI
-                    input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
+                    input("\nPERHATIAN : Bukan jadwal presensi shift anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
                     repeat_menu_choice_1 = True
 
             # FITUR 1.1 SELESAI - UI : COMMENT : DESAIN
@@ -971,10 +973,10 @@ def main_page_employee():   # FITUR KARYAWAN
                             input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')   # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
                     
                     elif x in DateTimeRange("00:00:00", prePresensiSiang):  # ABSENSI GLOBAL BELUM DIBUKA
-                        input("\nPERHATIAN : Waku belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")     # MENGEMBALIKAN KE MENU UTAMA
+                        input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")     # MENGEMBALIKAN KE MENU UTAMA
                 
                 else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT SIANG
-                    input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
+                    input("\nPERHATIAN : Bukan jadwal presensi shift anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
                     repeat_menu_choice_1 = True
 
             # FITUR 1.2 SELESAI - UI : COMMENT : DESAIN
@@ -1016,7 +1018,7 @@ def main_page_employee():   # FITUR KARYAWAN
                         input("\nPERHATIAN : Waku belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
                 
                 else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT MALAM
-                    input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
+                    input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
                     repeat_menu_choice_1 = True
             
             # FITUR 1.3 SELESAI - UI : COMMENT : DESAIN
@@ -1146,6 +1148,14 @@ def main_page_employee():   # FITUR KARYAWAN
         print(f"\nTOTAL TIDAK HADIR : {total_tidak_hadir}")
 
         # Persentase Kehadiran
+        # # Persentase Kehadiran   # masih eror
+        # if total_hari > 0:
+        #     attendance_percentage = round((total_kehadiran / total_hari * 100))
+        #     print(f"\nPersentase Kehadiran ({start_date} sampai {end_date}): {attendance_percentage}% ({total_kehadiran} dari {total_hari} hari kerja)")
+        # else:
+            print("\nTidak ada data kehadiran pada periode yang dipilih.")
+
+
         print(f"\nPERSENTASE KEHADIRAN: {total_kehadiran / total_days * 100:.2f}% dari 100%  ({total_kehadiran} dari {total_days} hari)")
 
         input("\n\n\nTekan [enter] untuk kembali ke Main Menu")
