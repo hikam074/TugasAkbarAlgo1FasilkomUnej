@@ -355,7 +355,7 @@ def main_page_admin():
         if menu_choice_2 == '1':    # FITUR 2.1 EDIT DATA>EDIT DATA ADMIN
             os.system('cls')
             df = pd.DataFrame(data_admin, columns=kolom_admin)  # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
-            masukan_edit_admin = input(f"admin>menu utama>edit data>edit data admin>\n=============== MENU EDIT DATA ADMIN ===============\ndata saat ini:\n\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n\nMasukkan ID admin yang hendak diubah : ")  # UI EDIT ADMIN
+            masukan_edit_admin = input(f"++{'='*86}++\n|| {f"admin>menu utama>edit data>edit data admin>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*28}E D I T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\ndata saat ini:\n\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n\nMasukkan ID admin yang hendak diubah : ")  # UI EDIT ADMIN
 
             # MENDETEKSI DATA ID YANG HENDAK DIUBAH ADA
             if masukan_edit_admin in df['ID'].values:   # BILA ID YANG HENDAK DIUBAH ITU ADA
@@ -408,12 +408,12 @@ def main_page_admin():
             input("Tekan [enter] untuk kembali ke menu utama")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 2.1 SELESAI DAN UI
+        # FITUR 2.1 SELESAI : UI : COMMENT : DESAIN
 
         elif menu_choice_2 == '2':  # FITUR 2.2 EDIT DATA>EDIT DATA KARYAWAN
             os.system('cls')
             df = pd.DataFrame(data_employee, columns=kolom_employee)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
-            masukan_edit_employee = input(f"admin>menu utama>edit data>edit data karyawan>\n=============== MENU EDIT DATA KARYAWAN ===============\n\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n\nMasukkan ID karyawan yang hendak diubah : ")  # UI EDIT KARYAWAN
+            masukan_edit_employee = input(f"++{'='*86}++\n|| {f"admin>menu utama>edit data>edit data karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*25}E D I T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\n\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n\nMasukkan ID karyawan yang hendak diubah : ")  # UI EDIT KARYAWAN
             
             # MENDETEKSI DATA ID YANG HENDAK DIUBAH ADA
             if masukan_edit_employee in df['ID'].values:    # BILA ID YANG HENDAK DIUBAH ITU ADA
@@ -496,10 +496,10 @@ def main_page_admin():
                 else:
                     print("kesalahan input, silahkan coba lagi")
 
-        # FITUR 2.2 SELESAI DAN UI
+        # FITUR 2.2 SELESAI - UI :COMMENT : DESAIN
 
             else:    # DATA YANG HENDAK DIUBAH TIDAK ADA
-                print("PERHATIAN : Kesalahan input atau data tidak ada...\nTekan [enter] untuk kembali ke menu utama")    
+                input("PERHATIAN : Kesalahan input atau data tidak ada...\nTekan [enter] untuk kembali ke menu utama")    
 
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
@@ -507,12 +507,12 @@ def main_page_admin():
             input("Tekan [enter] untuk kembali ke menu utama")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-    # FITUR 2 SELESAI - UI : COMMENT
+    # FITUR 2 SELESAI - UI : COMMENT : DESAIN
 
     elif menu_choice == '3':        # FITUR 3 EDIT DATA PRESENSI
         os.system('cls')
         df = pd.DataFrame(data_presensi, columns=kolom_presensi)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
-        masukan_edit_presensi_id = input("admin>menu utama>edit presensi karyawan>\n=============== MENU EDIT PRESENSI KARYAWAN ===============\n\nMasukkan ID karyawan yang hendak diubah : ")  # UI EDIT PRESENSI
+        masukan_edit_presensi_id = input(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}E D I T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n\n\nMasukkan ID karyawan yang hendak diubah : ")  # UI EDIT PRESENSI
 
         # MENDETEKSI DATA PRESENSI YANG HENDAK DIUBAH ITU ADA
         if masukan_edit_presensi_id in df['ID'].values:     # BILA DATA YANG HENDAK DIUBAH ITU ADA
@@ -590,14 +590,14 @@ def main_page_admin():
         input("Tekan [enter] untuk kembali ke menu utama")  # back to main menu
         main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-    # FITUR 3 SELESAI - UI : COMMENT
+    # FITUR 3 SELESAI - UI : COMMENT : DESAIN
 
     elif menu_choice == '4':        # FITUR 4 LIHAT DATA
         menu_choice_4 = input("[1] Lihat Data Admin\n[2] Lihat Data Karyawan\n[3] Lihat Presensi Karyawan\n[enter] Kembali ke menu utama\n\nPilih menu : ")
 
         if menu_choice_4 == '1':    # FITUR 4.1 LIHAT DATA>LIHAT DATA ADMIN
             os.system('cls')
-            print("admin>menu utama>lihat data>lihat data admin>\n=============== MENU LIHAT DATA ADMIN ===============\n")
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat data admin>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}L I H A T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\n")
             # MENAMPILKAN DATA
             df = pd.DataFrame(data_admin, columns=kolom_admin)
             print(tabulate.tabulate(df, headers="keys", tablefmt="grid", showindex=False))  
@@ -610,7 +610,7 @@ def main_page_admin():
             # HASIL SEARCH
             if search_ID in df['ID'].values:    # SEARCHING ADA DI DATABASE  
                 os.system('cls')
-                print("admin>menu utama>lihat data>lihat data admin>cari ID>\n=============== MENU LIHAT DATA ADMIN ===============") 
+                print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat data admin>cari ID>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}L I H A T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n") 
                 filtered_df = df.loc[df['ID'].str.contains(search_ID)]  # deklarasi data hasil filter
                 print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')    # memunculkan data di terminal
                 print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='grid', showindex=False))
@@ -621,7 +621,7 @@ def main_page_admin():
             input("\nTekan [enter] untuk kembali ke menu utama") 
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 4.1 SELESAI - UI : COMMENT
+        # FITUR 4.1 SELESAI - UI : COMMENT: DESAIN
 
         elif menu_choice_4 == '2':    # FITUR 4.2 LIHAT DATA>LIHAT DATA KARYAWAN
             os.system('cls')
