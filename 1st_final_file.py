@@ -625,7 +625,7 @@ def main_page_admin():
 
         elif menu_choice_4 == '2':    # FITUR 4.2 LIHAT DATA>LIHAT DATA KARYAWAN
             os.system('cls')
-            print("admin>menu utama>lihat data>lihat data karyawan>\n=============== MENU LIHAT DATA KARYAWAN ===============\n\njadwal minggu ini\n")
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat data karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\n\njadwal minggu ini\n")
             # MENAMPILKAN DATA
             # DISPLAY TABEL
             df = pd.DataFrame(data_employee, columns=kolom_employee)    # MEMASUKKAN LIST DATA BESAR KE PANDAS
@@ -645,7 +645,7 @@ def main_page_admin():
             # HASIL SEARCH
             if search_ID in df['ID'].values:    # SEARCHING ADA DI DATABASE
                 os.system('cls')
-                print("admin>menu utama>lihat data>lihat data karyawan>cari ID>\n=============== MENU LIHAT DATA KARYAWAN ===============") 
+                print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat data karyawan>cari ID>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n") 
                 filtered_df = df.loc[df['ID'].str.contains(search_ID)]  # deklarasi data hasil filter
                 print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')    # memunculkan data di terminal
                 print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='grid', showindex=False))
@@ -656,11 +656,11 @@ def main_page_admin():
             input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 4.2 SELESAI - UI : COMMENT
+        # FITUR 4.2 SELESAI - UI : COMMENT : DESAIN
 
         elif menu_choice_4 == '3':    # FITUR 4.3 LIHAT DATA>LIHAT PRESENSI KARYAWAN
             os.system('cls')
-            print("admin>menu utama>lihat data>lihat presensi karyawan>\n=============== MENU LIHAT PRESENSI KARYAWAN ===============\n\nrekapitulasi total\n")  # UI LIHAT PRESENSI KARYAWAN
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\n")  # UI LIHAT PRESENSI KARYAWAN
             # MENAMPILKAN DATA
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)    # memasukkan data list ke pandas
             df = df.sort_values(by='Tanggal',ascending=True)            # SORTIR BERDASARKAN TANGGAL
@@ -674,7 +674,7 @@ def main_page_admin():
             # HASIL SEARCH
             if search_ID in df['ID'].values:    # SEARCHING ADA DI DATABASE
                 os.system('cls')
-                print("admin>menu utama>lihat data>lihat presensi karyawan>cari ID>\n=============== MENU LIHAT PRESENSI KARYAWAN ===============") # UI LIHAT PRESENSI KARYAWAN DENGAN ID YANG DIINGINKAN
+                print(f"|| {f"admin>menu utama>lihat data>lihat presensi karyawan>cari ID>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n") # UI LIHAT PRESENSI KARYAWAN DENGAN ID YANG DIINGINKAN
                 filtered_df = df.loc[df['ID'].str.contains(search_ID)]  # deklarasi data hasil filter
                 print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')    # memunculkan data di terminal
                 print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))
@@ -684,7 +684,7 @@ def main_page_admin():
 
                 if search_date in df['Tanggal'].values:     # SEARCHING ADA DI DATABASE
                     os.system('cls')
-                    print("admin>menu utama>lihat data>lihat presensi karyawan>cari ID>cari tanggal>\n=============== MENU LIHAT PRESENSI KARYAWAN ===============")    # UI LIHAT PRESENSI KARYAWAN DENGAN ID DAN TANGGAL YANG DIINGINKAN
+                    print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat presensi karyawan>cari ID>cari tanggal>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n")    # UI LIHAT PRESENSI KARYAWAN DENGAN ID DAN TANGGAL YANG DIINGINKAN
                     filtered_df = df.loc[df['ID'].str.contains(search_ID)]                  # deklarasi data hasil filter
                     filtered_df = filtered_df.loc[df['Tanggal'].str.contains(search_date)]  # data hasil filtrasi ID dan tanggal
                     print(f'\nHasil Pencarian untuk tanggal "{search_date}"\n')             # IN-PROGRAM-NOTIFICATION DATA YANG DICARI ADA DI DATABASE
@@ -698,19 +698,19 @@ def main_page_admin():
             input("\nTekan [enter] untuk kembali ke menu utama")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 4.3 SELESAI - UI : COMMENT
+        # FITUR 4.3 SELESAI - UI : COMMENT : DESAIN
 
         else:   # BILA INPUTAN PILIHAN SALAH
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-    # FITUR 4 SELESAI - UI : COMMENT
+    # FITUR 4 SELESAI - UI : COMMENT : DESAIN
 
     elif menu_choice == '5':        # FITUR 5 HAPUS DATA
         menu_choice_5 = input("[1] Hapus Data Admin\n[2] Hapus Data Karyawan\n[3] Hapus Presensi Karyawan\nPilih menu : ")  # PILIHAN DATA MANA YANG HENDAK DIHAPUS
 
         if menu_choice_5 == '1':    # FITUR 5.1 HAPUS DATA>HAPUS DATA ADMIN
             os.system('cls')
-            print("admin>menu utama>hapus data>\n=============== MENU HAPUS DATA ADMIN ===============\nmenampilkan keseluruhan data...\n") # UI HAPUS DATA
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}H A P U S   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\nmenampilkan keseluruhan data...\n") # UI HAPUS DATA
             df = pd.DataFrame(data_admin, columns=kolom_admin)  # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
             print(tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False))    # MENAMPILKAN TABEL KE TERMINAL
 
@@ -744,12 +744,12 @@ def main_page_admin():
                 input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
                 main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 5.1 SELESAI - UI : COMMENT
+        # FITUR 5.1 SELESAI - UI : COMMENT : DESAIN
 
         elif menu_choice_5 == '2':    # FITUR 5.2 HAPUS DATA>HAPUS DATA KARYAWAN
 
             os.system('cls')
-            print("admin>menu utama>hapus data>\n=============== MENU HAPUS DATA KARYAWAN ===============\nmenampilkan keseluruhan data...\n")  # UI HAPUS DATA
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\nmenampilkan keseluruhan data...\n")  # UI HAPUS DATA
             df = pd.DataFrame(data_employee, columns=kolom_employee)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
             print(tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False))    # MENAMPILKAN TABEL KE TERMINAL
 
@@ -783,11 +783,11 @@ def main_page_admin():
                 input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
                 main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 5.2 SELESAI - UI : COMMENT
+        # FITUR 5.2 SELESAI - UI : COMMENT : DESAIN
 
         elif menu_choice_5 == '3':    # FITUR 5.3 HAPUS PRESENSI KARYAWAN
             os.system('cls')
-            print("admin>menu utama>hapus presensi karyawan>\n=============== MENU HAPUS PRESENSI KARYAWAN ===============\n\n") # UI HAPUS DATA
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}H A P U S   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n=\n\n") # UI HAPUS DATA
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
             
             # MENCARI TANGGAL YANG HENDAK DIHAPUS ITU ADA
@@ -821,12 +821,12 @@ def main_page_admin():
             input("\nTekan [enter] untuk kembali ke Main Menu")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
         
-        # FITUR 5.3 SELESAI - UI : COMMENT
+        # FITUR 5.3 SELESAI - UI : COMMENT : DESAIN
 
         else:
             main_page_admin()
 
-    # FITUR 5 SELESAI - UI : COMMENT
+    # FITUR 5 SELESAI - UI : COMMENT : DESAIN
 
     elif menu_choice == '6':    # kembali ke launch page
         launchPage()
@@ -837,7 +837,7 @@ def main_page_admin():
         main_page_admin()    # salah input, kembali ke menu utama admin
     os.system('cls')
 
-# FITUR ADMIN SELESAI - UI : COMMENT
+# FITUR ADMIN SELESAI - UI : COMMENT : DESAIN
       
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1234,7 +1234,7 @@ def main_page_employee():   # FITUR KARYAWAN
         main_page_employee()
     os.system('cls')
 
-# FITUR KARYAWAN SELESAI DAN UI
+# FITUR KARYAWAN SELESAI - UI : COMMENT : DESAIN
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
