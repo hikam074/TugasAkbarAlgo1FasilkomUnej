@@ -152,12 +152,22 @@ def main_page_admin():
         for row in reader_presensi:
             data_presensi.append(row)
 
+    # MENGIMPOR DATA HISTORI
+    data_history = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI
+    with open('histori_database.csv') as csvfile_histori:     # MEMBUKA .CSV PRESENSI
+        reader_histori = csv.reader(csvfile_histori)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
+        for row in reader_histori:
+            data_history.append(row)
+
+    histori_column = [y[0] for y in data_history]
+
     # MENDETEKSI NAMA ADMIN MENGGUNAKAN ID
     if launch_ID in admin_column:   # ID DAN PASSCODE ADA DI DATABASE ADMIN
         for x in range(0,len(data_admin)):      # mencocokkan ID hasil login dengan ID di database
             if launch_ID == data_admin[x][0]:   # ID DAN PASSCODE SESUAI DENGAN DATABASE ADMIN
-                print(f'Selamat Datang, admin "{data_admin[x][1]}"! Apa yang ingin anda lakukan saat ini?\n')   # selamat datang admin
-    print('\nMenu:\n[1] Tambahkan Orang\n[2] Edit Data\n[3] Edit Presensi Karyawan\n[4] Lihat Data\n[5] Hapus Data\n[6] Keluar')    # pilihan menu admin
+                print(f'Selamat Datang, admin "{data_admin[x][1]}"!')   # selamat datang admin
+
+    print('Apa yang ingin anda lakukan saat ini?\n\nMenu:\n[1] Tambahkan Orang\n[2] Edit Data\n[3] Edit Presensi Karyawan\n[4] Lihat Data\n[5] Hapus Data\n[6] Keluar\n\n[N] Notifkasi')    # pilihan menu admin
     menu_choice = input("\nPilih menu : ")
     print()
 
@@ -835,6 +845,15 @@ def main_page_admin():
 
     # FITUR 6 SELESAI - UI : COMMENT : DESAIN
 
+    elif menu_choice.upper() == 'N':
+        # MENGIMPOR DATA HISTORI & MEMUNCULKAN NOTIFIKASI
+        print("Notifikasi hari ini : ")
+        for row in histori_column: 
+            if datetime.datetime.now().strftime("%Y-%m-%d") in row:
+                print(row)
+        input("Tekan [enter] untuk kembali")
+        main_page_admin()
+
     else:
         main_page_admin()    # salah input, kembali ke menu utama admin
     os.system('cls')
@@ -911,6 +930,7 @@ def main_page_employee():   # FITUR KARYAWAN
                             status_kehadiran = "TERLAMBAT"
                         else :          # PRESENSI DILUAR JAM SHIFT
                             input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
+                            status_kehadiran = "TIDAK HADIR"
                             main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
                         
                         # MEMBUAT DATA UNTUK DIMASUKKAN
@@ -930,7 +950,7 @@ def main_page_employee():   # FITUR KARYAWAN
                         else:   # KARYAWAN SUDAH PRESENSI SEBELUMNYA
                             input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
                     
-                    elif x in DateTimeRange("00:00:00", prePresensiPagi):     # ABSENSI GLOBAL BELUM DIBUKA
+                    elif x in prePresensiPagi:     # ABSENSI GLOBAL BELUM DIBUKA
                         input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")     # MENGEMBALIKAN KE MENU UTAMA
 
                 else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT PAGI
@@ -953,6 +973,7 @@ def main_page_employee():   # FITUR KARYAWAN
                             status_kehadiran = "TERLAMBAT"
                         else :          # PRESENSI DILUAR JAM SHIFT
                             input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
+                            status_kehadiran = "TIDAK HADIR"
                             main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
                         
                         # MEMBUAT DATA UNTUK DIMASUKKAN
@@ -972,7 +993,7 @@ def main_page_employee():   # FITUR KARYAWAN
                         else:   # KARYAWAN SUDAH PRESENSI SEBELUMNYA
                             input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')   # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
                     
-                    elif x in DateTimeRange("00:00:00", prePresensiSiang):  # ABSENSI GLOBAL BELUM DIBUKA
+                    elif x in prePresensiSiang:  # ABSENSI GLOBAL BELUM DIBUKA
                         input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")     # MENGEMBALIKAN KE MENU UTAMA
                 
                 else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT SIANG
@@ -995,6 +1016,7 @@ def main_page_employee():   # FITUR KARYAWAN
                             status_kehadiran = "TERLAMBAT"
                         else :          # PRESENSI DILUAR JAM SHIFT
                             input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
+                            status_kehadiran = "TIDAK HADIR"
                             main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
                         
                         # MEMBUAT DATA UNTUK DIMASUKKAN
@@ -1014,7 +1036,7 @@ def main_page_employee():   # FITUR KARYAWAN
                         else:  # KARYAWAN SUDAH PRESENSI SEBELUMNYA
                             input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')   # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
                     
-                    elif x in DateTimeRange("00:00:00", prePresensiMalam):  # ABSENSI GLOBAL BELUM DIBUKA
+                    elif x in prePresensiMalam:  # ABSENSI GLOBAL BELUM DIBUKA
                         input("\nPERHATIAN : Waku belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
                 
                 else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT MALAM
@@ -1343,11 +1365,11 @@ def backendAutoPresensi():
             data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'PAGI','TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
             data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'PAGI', '', '']
             dataUpdateHistori = [f'{tanggal_presensi} shift kerja PAGI Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
-            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") )not in timeRangePagi) and (dataUpdateHistori not in dataHistory):
-                # data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                # with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                #     writer_presensi = csv.writer(csvfile_presensi)
-                #     writer_presensi.writerows(data_presensi)
+            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") )not in (timeRangePagi and prePresensiPagi)) and (dataUpdateHistori not in dataHistory):
+                data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
+                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    writer_presensi = csv.writer(csvfile_presensi)
+                    writer_presensi.writerows(data_presensi)
                 with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
                     writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
                     writer_histori.writerows([dataUpdateHistori])
@@ -1359,11 +1381,11 @@ def backendAutoPresensi():
             data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'SIANG','TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
             data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'SIANG', '', '']
             dataUpdateHistori = [f'{tanggal_presensi} shift kerja SIANG Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
-            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S")) not in timeRangeSiang) and (dataUpdateHistori not in dataHistory):
-                # data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                # with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                #     writer_presensi = csv.writer(csvfile_presensi)
-                #     writer_presensi.writerows(data_presensi)
+            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S")) not in (timeRangeSiang and prePresensiSiang)) and (dataUpdateHistori not in dataHistory):
+                data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
+                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    writer_presensi = csv.writer(csvfile_presensi)
+                    writer_presensi.writerows(data_presensi)
                 with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
                     writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
                     writer_histori.writerows([dataUpdateHistori])
@@ -1375,11 +1397,11 @@ def backendAutoPresensi():
             data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'MALAM','TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
             data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'MALAM', '', '']
             dataUpdateHistori = [f'{tanggal_presensi} shift kerja MALAM Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
-            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S")) not in timeRangeMalam) and (dataUpdateHistori not in dataHistory):
-                # data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                # with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                #       writer_presensi = csv.writer(csvfile_presensi)
-                #       writer_presensi.writerows(data_presensi)
+            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S")) not in (timeRangeMalam and prePresensiMalam)) and (dataUpdateHistori not in dataHistory):
+                data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
+                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                      writer_presensi = csv.writer(csvfile_presensi)
+                      writer_presensi.writerows(data_presensi)
                 with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
                     writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
                     writer_histori.writerows([dataUpdateHistori])
@@ -1503,13 +1525,13 @@ timeRangeSiang = DateTimeRange("10:00:00", "15:59:59")
 timeRangeMalam = DateTimeRange("16:00:00", "21:59:59")
 
 # range presensi shift
-prePresensiPagi = "03:59:59"
+prePresensiPagi = DateTimeRange("00:00:00", "03:59:59")
 openPresensiPagi = "04:00:00"
 closePresensiPagi = "05:00:00"
-prePresensiSiang = "09:59:59"
+prePresensiSiang = DateTimeRange("00:00:00", "09:59:59")
 openPresensiSiang = "10:00:00"
 closePresensiSiang = "11:00:00"
-prePresensiMalam = "15:59:59"
+prePresensiMalam = DateTimeRange("00:00:00", "15:59:59")
 openPresensiMalam = "16:00:00"
 closePresensiMalam = "17:00:00"
 
