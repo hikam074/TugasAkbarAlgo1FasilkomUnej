@@ -672,37 +672,131 @@ def main_page_admin():
 
         elif menu_choice_4 == '3':    # FITUR 4.3 LIHAT DATA>LIHAT PRESENSI KARYAWAN
             os.system('cls')
-            print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\n")  # UI LIHAT PRESENSI KARYAWAN
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n")  # UI LIHAT PRESENSI KARYAWAN
             # MENAMPILKAN DATA
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)    # memasukkan data list ke pandas
             df = df.sort_values(by='Tanggal',ascending=True)            # SORTIR BERDASARKAN TANGGAL
-            print(tabulate.tabulate(df, headers='keys', tablefmt='github', showindex=False))  # menampilkan data
+        
             # FITUR SEARCH BERDASARKAN ID
             search_ID = input("\nMasukkan ID yang hendak dicari : ")
             # MEMBUKA KEMBALI DATABASE UNTUK SEARCHING
             with open('presensi_database.csv', 'r') as presensi_file:
                 data_presensi = presensi_file.readlines()
-            df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],columns=["Tanggal", "ID", "Nama", "Shift","kehadiran","Waktu"])
+            df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],columns=kolom_presensi)
             # HASIL SEARCH
             if search_ID in df['ID'].values:    # SEARCHING ADA DI DATABASE
-                os.system('cls')
-                print(f"|| {f"admin>menu utama>lihat data>lihat presensi karyawan>cari ID>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n") # UI LIHAT PRESENSI KARYAWAN DENGAN ID YANG DIINGINKAN
-                filtered_df = df.loc[df['ID'].str.contains(search_ID)]  # deklarasi data hasil filter
-                print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')    # memunculkan data di terminal
-                print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))
 
-                #SEARCHING LAGI DENGAN TANGGAL
-                search_date = input("\nMasukkan Tanggal yang hendak dicari [yyyy-mm-dd] : ")
+                menu_presensi_karyawan = input("\n[1] Lihat Data Presensi\n[2] Lihat Rekapitulasi Presensi\nMasukan opsi : ")
 
-                if search_date in df['Tanggal'].values:     # SEARCHING ADA DI DATABASE
+                # FITUR 4.3.1 LIHAT DATA>LIHAT PRESENSI KARYAWAN
+                if menu_presensi_karyawan == '1':
+                    print(f"|| {f"admin>menu utama>lihat data>lihat presensi karyawan>cari ID>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n") # UI LIHAT PRESENSI KARYAWAN DENGAN ID YANG DIINGINKAN
+                    filtered_df = df.loc[df['ID'].str.contains(search_ID)]  # deklarasi data hasil filter
+                    print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')    # memunculkan data di terminal
+                    print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))
+
+                    #SEARCHING LAGI DENGAN TANGGAL
+                    search_date = input("\nMasukkan Tanggal yang hendak dicari [yyyy-mm-dd] : ")
+
+                    if search_date in df['Tanggal'].values:     # SEARCHING ADA DI DATABASE
+                        os.system('cls')
+                        print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat presensi karyawan>cari ID>cari tanggal>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n")    # UI LIHAT PRESENSI KARYAWAN DENGAN ID DAN TANGGAL YANG DIINGINKAN
+                        filtered_df = df.loc[df['ID'].str.contains(search_ID)]                  # deklarasi data hasil filter
+                        filtered_df = filtered_df.loc[df['Tanggal'].str.contains(search_date)]  # data hasil filtrasi ID dan tanggal
+                        print(f'\nHasil Pencarian untuk tanggal "{search_date}"\n')             # IN-PROGRAM-NOTIFICATION DATA YANG DICARI ADA DI DATABASE
+                        print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))   # memunculkan data di terminal
+                    else:   # HASIL SEARCHING DENGAN TANGGAL TIDAK DITEMUKAN
+                        print("\nData yang anda cari tidak ada...")
+
+                # FITUR 4.3.2 LIHAT DATA>LIHAT REKAPITULASI PRESENSI KARYAWAN
+                elif menu_presensi_karyawan == '2':
+                    
+                    # Filter DataFrame berdasarkan ID yang sudah login
+                    filtered_df = df.loc[df['ID'] == search_ID]
+
+                    # Pilihan untuk rekap mingguan atau bulanan
+                    ulangAdmin4 = True
+                    while ulangAdmin4:
+                        rekap_choice = input("\nPilih jenis rekapitulasi\n[1] Minggu Ini\n[2] Minggu Lalu\n[3] Bulan Ini\n[4] Bulan Lalu\n[5] Kembali ke menu utama\n\nMasukkan pilihan : ")
+
+                        now = datetime.datetime.now()
+
+                        if rekap_choice == '1':  # Minggu Ini
+                            rekap_choice_word = "minggu ini"
+                            ulangAdmin4 = False
+                            start_date = (now - timedelta(days=now.weekday())).strftime('%Y-%m-%d')
+                            end_date = (now + timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
+                            total_days = 7
+
+                        elif rekap_choice == '2':  # Minggu Lalu
+                            rekap_choice_word = "minggu lalu"
+                            ulangAdmin4 = False
+                            start_date = (now - timedelta(days=(now.weekday() + 7))).strftime('%Y-%m-%d')
+                            end_date = (now - timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
+                            total_days = 7
+
+                        elif rekap_choice == '3':  # Bulan Ini
+                            rekap_choice_word = "bulan ini"
+                            ulangAdmin4 = False
+                            start_date = f'{now.year}-{now.month:02d}-01'
+                            last_day = calendar.monthrange(now.year, now.month)[1]
+                            end_date = f'{now.year}-{now.month:02d}-{last_day}'
+                            total_days = last_day
+
+                        elif rekap_choice == '4':  # Bulan Lalu
+                            rekap_choice_word = "bulan lalu"
+                            ulangAdmin4 = False
+                            last_month = (now.replace(day=1) - timedelta(days=1)).replace(day=1)
+                            start_date = f'{last_month.year}-{last_month.month:02d}-01'
+                            last_day = calendar.monthrange(last_month.year, last_month.month)[1]
+                            end_date = f'{last_month.year}-{last_month.month:02d}-{last_day}'
+                            total_days = last_day
+
+                        elif rekap_choice == '5':
+                            input("\nTekan [enter] untuk kembali ke menu utama")
+                            main_page_admin()    # MENGEMBALIKAN KE MENU UTAMA
+
+                        else:
+                            input('Pilihan yang anda berikan tidak ada!\nCoba lagi')    # KESALAHAN INPUT, KEMBALI KE NEMU REKAP
+                            ulangAdmin4 = True
+                    
+                    # Filter DataFrame berdasarkan tanggal
+                    filtered_df = filtered_df.loc[(filtered_df['Tanggal'] >= start_date) & (filtered_df['Tanggal'] <= end_date)]
+
+                    # Menghitung statistik kehadiran
+                    total_kehadiran_tepat_waktu = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'HADIR'])
+                    total_terlambat = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TERLAMBAT'])
+                    total_kehadiran = total_kehadiran_tepat_waktu + total_terlambat
+                    total_tidak_hadir = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TIDAK HADIR'])
+
+                    total_hari_kerja = total_kehadiran + total_tidak_hadir  # Total hari kerja dihitung berdasarkan jumlah data presensi
+
+                    # Menampilkan statistik kehadiran
                     os.system('cls')
-                    print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat presensi karyawan>cari ID>cari tanggal>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n")    # UI LIHAT PRESENSI KARYAWAN DENGAN ID DAN TANGGAL YANG DIINGINKAN
-                    filtered_df = df.loc[df['ID'].str.contains(search_ID)]                  # deklarasi data hasil filter
-                    filtered_df = filtered_df.loc[df['Tanggal'].str.contains(search_date)]  # data hasil filtrasi ID dan tanggal
-                    print(f'\nHasil Pencarian untuk tanggal "{search_date}"\n')             # IN-PROGRAM-NOTIFICATION DATA YANG DICARI ADA DI DATABASE
-                    print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))   # memunculkan data di terminal
-                else:   # HASIL SEARCHING DENGAN TANGGAL TIDAK DITEMUKAN
-                    print("\nData yang anda cari tidak ada...")
+                    print(f'++{'='*86}++\n|| {'admin>menu utama>lihat data>lihat rekapitulasi presensi karyawan>'f"{rekap_choice_word}"'>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*23}R E K A P I T U L A S I   P R E S E N S I{' '*22}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\nMenampilkan rekapitulasi "{rekap_choice_word.upper()}"\n{start_date} | {end_date}\n\n\nTOTAL HADIR : {total_kehadiran}')  # UI HASIL REKAPAN
+
+                    # Rincian Total Kehadiran
+                    print("    Rincian:")
+                    print(f"      -Total Hadir Tepat Waktu: {total_kehadiran_tepat_waktu}")
+                    print(f"      -Total Terlambat: {total_terlambat}")
+
+                    print(f"\nTOTAL TIDAK HADIR : {total_tidak_hadir}")
+
+                    # Persentase Kehadiran
+                    if total_hari_kerja > 0:
+                        attendance_percentage = round((total_kehadiran / total_hari_kerja * 100))
+                        print(f"\nPERSENTASE KEHADIRAN ({start_date} sampai {end_date}): {attendance_percentage}% ({total_kehadiran} dari {total_hari_kerja} hari kerja)")
+                    else:
+                        print("\nTidak ada data kehadiran pada periode yang dipilih.")
+
+                    input("\n\n\nTekan [enter] untuk kembali ke Main Menu")
+                    main_page_admin()    # MENGEMBALIKAN KE MENU UTAMA
+
+
+
+
+
+
 
             else:   # HASIL SEARCHING TIDAK DITEMUKAN
                 print("\nData yang anda cari tidak ada...")
