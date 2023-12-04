@@ -792,12 +792,6 @@ def main_page_admin():
                     input("\n\n\nTekan [enter] untuk kembali ke Main Menu")
                     main_page_admin()    # MENGEMBALIKAN KE MENU UTAMA
 
-
-
-
-
-
-
             else:   # HASIL SEARCHING TIDAK DITEMUKAN
                 print("\nData yang anda cari tidak ada...")
 
@@ -1157,23 +1151,22 @@ def main_page_employee():   # FITUR KARYAWAN
 
         # MEMASUKKAN DATA KE PANDAS
         df = pd.DataFrame(data_employee,columns=kolom_employee)
-
         # Filter DataFrame berdasarkan ID yang sudah login
         filtered_df = df.loc[df['ID'] == launch_ID]
-        if filtered_df.loc[0, 'Shift 1'] == 'True': # SHIFT PAGI
+        if filtered_df.loc[tujuan, 'Shift 1'] == 'True': # SHIFT PAGI
             print('"PAGI"\n04:00:00 - 10:00:00')
-            if filtered_df.loc[0, 'Shift 2'] == 'True': # SHIFT SIANG
+            if filtered_df.loc[tujuan, 'Shift 2'] == 'True': # SHIFT SIANG
                 print('"SIANG"\n10:00:00 - 16:00:00')
-                if filtered_df.loc[0, 'Shift 3'] == 'True': # SHIFT SIANG
+                if filtered_df.loc[tujuan, 'Shift 3'] == 'True': # SHIFT SIANG
                     print('"MALAM"\n16:00:00 - 22:00:00')
             statShift = False   # BUKAN TIDAK SHIFT PAGI
-        elif filtered_df.loc[0, 'Shift 2'] == 'True':   # SHIFT SIANG
+        elif filtered_df.loc[tujuan, 'Shift 2'] == 'True':   # SHIFT SIANG
             print('"SIANG"\n10:00:00 - 16:00:00')
-            if filtered_df.loc[0, 'Shift 3'] == 'True': # SHIFT MALAM
+            if filtered_df.loc[tujuan, 'Shift 3'] == 'True': # SHIFT MALAM
                 print('"MALAM"16:00:00 - 22:00:00')
             statShift = False   # BUKAN TIDAK SHIFT SIANG
-        elif filtered_df.loc[0, 'Shift 3'] == 'True':   # SHIFT MALAM
-            print('"MALAM"16:00:00 - 22:00:00')
+        elif filtered_df.loc[tujuan, 'Shift 3'] == 'True':   # SHIFT MALAM
+            print('"MALAM"\n16:00:00 - 22:00:00')
             statShift = False   # BUKAN TIDAK SHIFT MALAM
 
         if statShift == True:   # BUKAN SHIFT PAGI/SIANG/MALAM
